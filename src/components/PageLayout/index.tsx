@@ -1,11 +1,22 @@
-import { Box, Flex, FlexProps } from '@chakra-ui/react';
-import { PropsWithChildren } from 'react';
+import { Box, Divider, Flex, FlexProps } from '@chakra-ui/react';
+import { PropsWithChildren, ReactNode } from 'react';
+import Footer from '@/components/Footer';
 
-interface PageLayoutProps extends PropsWithChildren, FlexProps {}
-
-export default function PageLayout({ children, ...props }: PageLayoutProps) {
+export default function PageLayout({ children }: { children: ReactNode }) {
   return (
-    <Flex minW="100%" bg="navy.900" justifyContent="center">
+    <>
+      <Wrapper>{children}</Wrapper>
+      <Divider minW="100%" borderColor="gray.900" />
+      <Wrapper>
+        <Footer />
+      </Wrapper>
+    </>
+  );
+}
+
+function Wrapper({ children, ...props }: PropsWithChildren) {
+  return (
+    <Flex minW="100%" bg="navy.900" justifyContent="center" position="relative">
       <Box
         w="100%"
         maxW={{
@@ -16,7 +27,6 @@ export default function PageLayout({ children, ...props }: PageLayoutProps) {
           '2xl': '96rem',
         }}
         px={{ base: '16px', lg: '24px' }}
-        {...props}
       >
         {children}
       </Box>

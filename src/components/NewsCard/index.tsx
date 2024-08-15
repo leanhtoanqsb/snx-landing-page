@@ -8,53 +8,70 @@ import {
   LinkBox,
   LinkOverlay,
   Box,
+  Card,
 } from '@chakra-ui/react';
 
 interface NewCardProps extends FlexProps {
-  imageUrl?: string;
+  imageUri?: string;
   title?: string;
   description?: string;
   link?: string;
 }
 
 export const NewsCard = ({
-  imageUrl,
+  imageUri,
   title,
   description,
   link,
 }: NewCardProps) => {
   return (
-    <Box>
+    <Card variant="filled">
       <Flex
+        mb="16px"
         justifyContent={{ base: 'flex-end', md: 'space-between' }}
         width="100%"
       >
         <Image
-          display={{ base: 'none', md: 'unset' }}
-          alt={`${name}-logo`}
-          src={imageUrl}
+          alt={`${title}-logo`}
+          src={imageUri}
+          w="100%"
+          h="203px"
+          bg="gray.500"
         />
       </Flex>
-      <Heading my="16px" fontSize="18px">
+      <Heading
+        mb="16px"
+        as="h3"
+        fontSize="18px"
+        lineHeight="28px"
+        color="gray.50"
+      >
         {title}
       </Heading>
       <Text
-        fontFamily="heading"
         fontSize="16px"
-        lineHeight="24px"
+        lineHeight="28px"
         color="gray.500"
+        noOfLines={3}
+        flex="1"
       >
         {description}
       </Text>
-      <LinkBox mt="16px">
+      <LinkBox mt="16px" width="max-content">
         <Flex
+          px="12px"
+          height="32px"
           alignItems="center"
-          p="10px 16px"
-          bg="transparent"
-          border="1px"
-          borderColor="cyan.500"
+          border="1px solid"
           borderRadius="4px"
+          borderColor="gray.900"
           width="fit-content"
+          color="white"
+          transition="0.3s"
+          _hover={{
+            borderColor: 'cyan.500',
+            color: 'cyan.500',
+          }}
         >
           <LinkOverlay href={link} target="_blank">
             <Text
@@ -62,14 +79,13 @@ export const NewsCard = ({
               fontFamily="heading"
               fontWeight={700}
               lineHeight="20px"
-              color="cyan.500"
             >
-              Deposit Liquidity
+              Learn More
             </Text>
           </LinkOverlay>
           <ArrowDiagonal ml={2} />
         </Flex>
       </LinkBox>
-    </Box>
+    </Card>
   );
 };

@@ -14,28 +14,40 @@ import {
 
 export default function News() {
   return (
-    <Box width="100%" id="category" position="relative">
-      <Box py="100px" position="relative" zIndex={1} maxW="800px">
-        <Heading
-          fontSize={{ base: '48px', md: '60px' }}
-          maxW={{ md: '483px' }}
-          as="h2"
-          color="gray.50"
-          mb="16px"
+    <Box pt="100px" pb="191px" width="100%" id="category" position="relative">
+      <Box position="relative" zIndex={1}>
+        <Box maxW="800px">
+          <Heading
+            fontSize={{ base: '48px', md: '60px' }}
+            maxW={{ md: '483px' }}
+            as="h2"
+            color="gray.50"
+            mb="16px"
+          >
+            Latest News
+          </Heading>
+          <Text
+            mb="24px"
+            fontSize="16px"
+            lineHeight="24px"
+            color="gray.500"
+            fontWeight={400}
+          >
+            Multiple front ends have chosen to integrate Synthetix&apos;s
+            composable and permissionless smart contracts
+          </Text>
+        </Box>
+        <Box
+          pt="100px"
+          display="grid"
+          width="100%"
+          gridTemplateColumns={{
+            base: '1fr',
+            md: '1fr 1fr',
+            xl: 'repeat(3, 1fr)',
+          }}
+          gap="24px"
         >
-          Latest News
-        </Heading>
-        <Text
-          mb="24px"
-          fontSize="16px"
-          lineHeight="24px"
-          color="gray.500"
-          fontWeight={400}
-        >
-          Multiple front ends have chosen to integrate Synthetix&apos;s
-          composable and permissionless smart contracts
-        </Text>
-        <Box pt="100px">
           {mockData.map((data, index) => {
             return <NewsCard key={index} {...data} />;
           })}
@@ -43,12 +55,11 @@ export default function News() {
       </Box>
       <Box
         position="absolute"
-        // backgroundImage="linear-gradient(44deg, #34EDB3 0%, #00D1FF 100%)"
-        backgroundColor="cyan.600"
+        bgGradient="linear(to-tr, green.500, cyan.500)"
         width="618px"
         height="694px"
         left="-492px"
-        top="-138px"
+        top="238px"
         borderRadius="100%"
         filter="blur(250px)"
       />
@@ -59,8 +70,23 @@ export default function News() {
 const mockData = [
   {
     title: 'Test',
-    description: 'Test description',
-    imageUrl: '',
+    description:
+      'Polynomial is a DeFi derivatives powerhouse that offers derivatives-based products built on top of Synthetix such as perps. Polynomial is a DeFi derivatives powerhouse that offers derivatives-based products built on top of Synthetix such as perps, power...',
+    imageUri: '',
+    link: '',
+  },
+  {
+    title: 'Test',
+    description:
+      'Polynomial is a DeFi derivatives powerhouse that offers derivatives-based products built on top of Synthetix such as perps. Polynomial is a DeFi derivatives powerhouse that offers derivatives-based products built on top of Synthetix such as perps, power...',
+    imageUri: '',
+    link: '',
+  },
+  {
+    title: 'Test',
+    description:
+      'Polynomial is a DeFi derivatives powerhouse that offers derivatives-based products built on top of Synthetix such as perps. Polynomial is a DeFi derivatives powerhouse that offers derivatives-based products built on top of Synthetix such as perps, power...',
+    imageUri: '',
     link: '',
   },
 ];

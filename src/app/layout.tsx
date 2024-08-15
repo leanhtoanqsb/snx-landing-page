@@ -14,7 +14,9 @@ export default function RootLayout({
         <Providers>
           <Header />
           <Divider width="100%" borderColor="gray.900" />
-          <Box pt="64px">{children}</Box>
+          <Box pt="64px" overflowX="hidden">
+            {children}
+          </Box>
         </Providers>
       </body>
     </html>

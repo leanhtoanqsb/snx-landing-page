@@ -36,7 +36,7 @@ export default function Header() {
       minH="64px"
       alignItems="center"
       justifyContent="center"
-      minW="100vw"
+      minW="100%"
       bg="navy.900"
       borderBottomColor="gray.900"
       borderBottomWidth="1px"
@@ -49,7 +49,7 @@ export default function Header() {
         alignItems="center"
         justifyContent={{ base: 'center', xl: 'space-between' }}
         maxW={{
-          base: '100vw',
+          base: '100%',
           md: '48rem',
           lg: '62rem',
           xl: '80rem',

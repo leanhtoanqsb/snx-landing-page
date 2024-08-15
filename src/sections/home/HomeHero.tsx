@@ -12,9 +12,8 @@ import {
 
 export default function HomeHero() {
   return (
-    <Box width="100%" id="hero" position="relative">
+    <Box pt="187px" pb="66px" width="100%" id="hero" position="relative">
       <Box
-        pt="187px"
         position="relative"
         zIndex={1}
         width={{ base: '100%', lg: '525px', '2xl': '628px' }}
@@ -68,7 +67,7 @@ export default function HomeHero() {
           src="/Spartan.png"
           alt="Spartan"
           top={{ base: '125px', md: '50px' }}
-          left={{ base: '-20%', sm: '0%' }}
+          left={{ base: '-20%', sm: '300px' }}
           position="absolute"
           zIndex={0}
           minWidth={{ base: '700px' }}

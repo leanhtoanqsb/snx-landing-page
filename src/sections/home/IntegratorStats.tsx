@@ -36,38 +36,38 @@ export default function IntegratorStats() {
         borderColor="gray.900"
       >
         <Table variant="simple">
-          <Thead color="gray.600">
+          <Thead >
             <Tr height="40px" textAlign="left">
-              <Th textTransform="none" borderColor="gray.900">
+              <Th>
                 Action
               </Th>
-              <Th textTransform="none" borderColor="gray.900">
+              <Th>
                 TVL
               </Th>
-              <Th textTransform="none" borderColor="gray.900">
+              <Th>
                 Daily OI
               </Th>
-              <Th textTransform="none" borderColor="gray.900">
+              <Th>
                 Daily Volume
               </Th>
-              <Th textTransform="none" borderColor="gray.900">
+              <Th>
                 Daily Fees
               </Th>
-              <Th textTransform="none" borderColor="gray.900">
+              <Th>
                 Daily DAU
               </Th>
             </Tr>
           </Thead>
-          <Tbody color="gray.50">
+          <Tbody>
             {Array.from({ length: 10 }, (_, v) => v).map((v) => {
               return (
-                <Tr height="60px">
-                  <Td borderColor="gray.900">KWENTA</Td>
-                  <Td borderColor="gray.900">$23,839.31</Td>
-                  <Td borderColor="gray.900">$23,839.31</Td>
-                  <Td borderColor="gray.900">$23,839.31</Td>
-                  <Td borderColor="gray.900">$23,839.31</Td>
-                  <Td borderColor="gray.900">$23,839.31</Td>
+                <Tr height="60px" key={v}>
+                  <Td>KWENTA</Td>
+                  <Td>$23,839.31</Td>
+                  <Td>$23,839.31</Td>
+                  <Td>$23,839.31</Td>
+                  <Td>$23,839.31</Td>
+                  <Td>$23,839.31</Td>
                 </Tr>
               );
             })}

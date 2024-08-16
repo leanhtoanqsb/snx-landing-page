@@ -1,3 +1,5 @@
+'use client';
+
 import { Box, Text, Flex, Heading } from '@chakra-ui/react';
 import EmailSignup from '@/components/EmailSignup';
 import { usePathname } from 'next/navigation';

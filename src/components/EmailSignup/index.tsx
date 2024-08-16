@@ -1,3 +1,5 @@
+'use client';
+
 import { useReducer, FocusEvent, useRef, useEffect } from 'react';
 import {
   Box,

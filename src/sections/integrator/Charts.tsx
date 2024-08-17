@@ -1,12 +1,15 @@
 'use client';
 
-import React, { PureComponent } from 'react';
+import React, { PureComponent, ReactNode } from 'react';
 import {
+  Area,
+  AreaChart,
   CartesianGrid,
   Line,
   LineChart,
   ReferenceLine,
   ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
 } from 'recharts';
@@ -22,7 +25,9 @@ import {
   Text,
   Image,
   Heading,
+  Card,
 } from '@chakra-ui/react';
+import { formatLocalDate } from '@/utils/formatters/number';
 
 export default function Charts() {
   const { data } = useQuery({
@@ -34,41 +39,88 @@ export default function Charts() {
         .slice(0, 30);
     },
   });
-  console.log('data', data);
   return (
-    <Box py="100px" width="100%" id="hero" position="relative" maxW="800px">
-      <Box sx={{ width: '2000px', height: '500px' }}>
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart
-            data={data}
-            // margin={{
-            //   top: 5,
-            //   right: 30,
-            //   left: 20,
-            //   bottom: 5,
-            // }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
+    <Box py="100px" width="100%" id="hero" position="relative">
+      <ChartContainer
+        chartLabel="TVL"
+        chartHeight="300px"
+        curveColor="cyan.500"
+        areaColor="cyan.500"
+      >
+        <AreaChart data={data}>
+          <CartesianGrid />
+          <YAxis dataKey="daily_fee" axisLine={false} tickLine={false} />
+          <XAxis
+            dataKey="day"
+            tickLine={false}
+            tickFormatter={(value) => {
+              return `${formatLocalDate(value, 'MM/DD')}`;
+            }}
+            tickMargin={16}
+            interval={1}
+          />
+          <Tooltip />
+          <Area type="monotone" dataKey="daily_fee" strokeWidth={3} />
+        </AreaChart>
+      </ChartContainer>
 
-            <YAxis dataKey="daily_fee" />
-
-            <XAxis
-              dataKey="day"
-              tickFormatter={(value) => {
-                const time = new Date(value);
-                return `${time.getDate()}/${time.getMonth()}`;
-              }}
-            />
-
-            <Line
-              strokeWidth={2}
-              dot={false}
-              dataKey="daily_fee"
-              stroke="#fff"
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </Box>
+      <Box
+        position="absolute"
+        bgGradient="linear(to-tr, green.500, cyan.500)"
+        width="618px"
+        height="694px"
+        left="-492px"
+        top="238px"
+        borderRadius="100%"
+        filter="blur(250px)"
+      />
     </Box>
+  );
+}
+
+function ChartContainer({
+  children,
+  chartHeight,
+  curveColor,
+  areaColor,
+  chartLabel,
+}: {
+  children: JSX.Element;
+  chartHeight: string;
+  curveColor: string;
+  areaColor: string;
+  chartLabel: string;
+}) {
+  return (
+    <Card
+      variant="filled"
+      position="relative"
+      zIndex="1"
+      sx={{
+        width: '100%',
+        height: chartHeight,
+        '.recharts-cartesian-grid': {
+          '.recharts-cartesian-grid-vertical': { display: 'none' },
+        },
+        '.recharts-layer': {
+          '.recharts-area-curve': { stroke: curveColor, fillOpacity: '1' },
+          '.recharts-area-area': { fill: areaColor, fillOpacity: '0.1' },
+          '.recharts-cartesian-axis-tick-value': { fill: 'gray.500' },
+        },
+      }}
+    >
+      <Text
+        fontSize="20px"
+        lineHeight="28px"
+        color="gray.50"
+        mb="24px"
+        fontWeight={500}
+      >
+        {chartLabel}
+      </Text>
+      <ResponsiveContainer width="100%" height="100%">
+        {children}
+      </ResponsiveContainer>
+    </Card>
   );
 }

@@ -34,9 +34,10 @@ export const toBigNumber = (value: NumericValue) => new BigNumber(value);
 
 // TODO: implement max decimals
 export const formatNumber = (
-  value: NumericValue,
+  value: NumericValue | undefined,
   options?: FormatNumberOptions
 ) => {
+  if (value == null) return '--';
   const prefix = options?.prefix;
   const suffix = options?.suffix;
 

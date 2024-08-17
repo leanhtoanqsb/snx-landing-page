@@ -12,6 +12,7 @@ import {
   Tooltip,
   XAxis,
   YAxis,
+  TooltipProps,
 } from 'recharts';
 import fetchIntegratorsData from '@/api/integrator';
 import Spartan from '@/svg/Spartan';
@@ -27,7 +28,9 @@ import {
   Heading,
   Card,
 } from '@chakra-ui/react';
-import { formatLocalDate } from '@/utils/formatters/number';
+import { formatLocalDate, formatNumber } from '@/utils/formatters/number';
+
+const CHART_SYNC_ID = 'intergrator-chart';
 
 export default function Charts() {
   const { data } = useQuery({
@@ -40,14 +43,15 @@ export default function Charts() {
     },
   });
   return (
-    <Box py="100px" width="100%" id="hero" position="relative">
+    <Box pt="100px" pb="200px" width="100%" id="hero" position="relative">
+      {/* Chart TVL */}
       <ChartContainer
         chartLabel="TVL"
-        chartHeight="300px"
+        chartHeight="354px"
         curveColor="cyan.500"
         areaColor="cyan.500"
       >
-        <AreaChart data={data}>
+        <AreaChart data={data} syncId={CHART_SYNC_ID}>
           <CartesianGrid />
           <YAxis dataKey="daily_fee" axisLine={false} tickLine={false} />
           <XAxis
@@ -57,16 +61,98 @@ export default function Charts() {
               return `${formatLocalDate(value, 'MM/DD')}`;
             }}
             tickMargin={16}
-            interval={1}
+            interval={'equidistantPreserveStart'}
           />
-          <Tooltip />
+          <Tooltip content={CustomTooltip} />
           <Area type="monotone" dataKey="daily_fee" strokeWidth={3} />
         </AreaChart>
       </ChartContainer>
+      <Box
+        mt="24px"
+        display="grid"
+        gridTemplateColumns={{ base: '1fr', lg: '1fr 1fr' }}
+        gridAutoRows="354px"
+        gap="24px"
+      >
+        {/* Chart daily volume */}
+        <ChartContainer chartLabel="Daily Volume" curveColor="pink.400">
+          <AreaChart data={data} syncId={CHART_SYNC_ID}>
+            <CartesianGrid />
+            <YAxis dataKey="daily_fee" axisLine={false} tickLine={false} />
+            <XAxis
+              dataKey="day"
+              tickLine={false}
+              tickFormatter={(value) => {
+                return `${formatLocalDate(value, 'MM/DD')}`;
+              }}
+              tickMargin={16}
+              interval={'equidistantPreserveStart'}
+            />
+            <Tooltip content={CustomTooltip} />
+            <Area type="monotone" dataKey="daily_fee" strokeWidth={3} />
+          </AreaChart>
+        </ChartContainer>
+
+        {/* Chart daily fees */}
+        <ChartContainer chartLabel="Daily Fees" curveColor="pink.400">
+          <AreaChart data={data} syncId={CHART_SYNC_ID}>
+            <CartesianGrid />
+            <YAxis dataKey="daily_fee" axisLine={false} tickLine={false} />
+            <XAxis
+              dataKey="day"
+              tickLine={false}
+              tickFormatter={(value) => {
+                return `${formatLocalDate(value, 'MM/DD')}`;
+              }}
+              tickMargin={16}
+              interval={'equidistantPreserveStart'}
+            />
+            <Tooltip content={CustomTooltip} />
+            <Area type="monotone" dataKey="daily_fee" strokeWidth={3} />
+          </AreaChart>
+        </ChartContainer>
+
+        {/* chart active user */}
+        <ChartContainer chartLabel="Daily Active Users" curveColor="pink.400">
+          <AreaChart data={data} syncId={CHART_SYNC_ID}>
+            <CartesianGrid />
+            <YAxis dataKey="daily_fee" axisLine={false} tickLine={false} />
+            <XAxis
+              dataKey="day"
+              tickLine={false}
+              tickFormatter={(value) => {
+                return `${formatLocalDate(value, 'MM/DD')}`;
+              }}
+              tickMargin={16}
+              interval={'equidistantPreserveStart'}
+            />
+            <Tooltip content={<CustomTooltip />} />
+            <Area type="monotone" dataKey="daily_fee" strokeWidth={3} />
+          </AreaChart>
+        </ChartContainer>
+        {/* chart OI */}
+        <ChartContainer chartLabel="Daily OI" curveColor="pink.400">
+          <AreaChart data={data} syncId={CHART_SYNC_ID}>
+            <CartesianGrid />
+            <YAxis dataKey="daily_fee" axisLine={false} tickLine={false} />
+            <XAxis
+              dataKey="day"
+              tickLine={false}
+              tickFormatter={(value) => {
+                return `${formatLocalDate(value, 'MM/DD')}`;
+              }}
+              tickMargin={16}
+              interval={'equidistantPreserveStart'}
+            />
+            <Tooltip content={<CustomTooltip />} />
+            <Area type="monotone" dataKey="daily_fee" strokeWidth={3} />
+          </AreaChart>
+        </ChartContainer>
+      </Box>
 
       <Box
         position="absolute"
-        bgGradient="linear(to-tr, green.500, cyan.500)"
+        bgGradient="linear(to-tr, pink.500, purple.500)"
         width="618px"
         height="694px"
         left="-492px"
@@ -80,15 +166,15 @@ export default function Charts() {
 
 function ChartContainer({
   children,
-  chartHeight,
+  chartHeight = '100%',
   curveColor,
-  areaColor,
+  areaColor = 'transparent',
   chartLabel,
 }: {
   children: JSX.Element;
-  chartHeight: string;
+  chartHeight?: string;
   curveColor: string;
-  areaColor: string;
+  areaColor?: string;
   chartLabel: string;
 }) {
   return (
@@ -97,6 +183,7 @@ function ChartContainer({
       position="relative"
       zIndex="1"
       sx={{
+        boxShadow: 'dark',
         width: '100%',
         height: chartHeight,
         '.recharts-cartesian-grid': {
@@ -123,4 +210,22 @@ function ChartContainer({
       </ResponsiveContainer>
     </Card>
   );
+}
+function CustomTooltip({
+  active,
+  payload,
+  label,
+}: TooltipProps<string | number, string | number>) {
+  if (active && payload && payload.length) {
+    return (
+      <Card variant="filled" sx={{ boxShadow: 'dark', p: '8px' }}>
+        <Text color="gray.50">{formatLocalDate(payload[0].payload?.day)}</Text>
+        <Text color="gray.50">
+          {formatNumber(payload[0].value, { prefix: '$' })}
+        </Text>
+      </Card>
+    );
+  }
+
+  return null;
 }

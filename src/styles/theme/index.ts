@@ -4,6 +4,10 @@ import { fonts } from './fonts';
 
 export const customTheme = extendTheme({
   ...theme,
+  shadows: {
+    ...theme.shadows,
+    dark: '0px 0px 0px 1px #0000001a, 0px 5px 10px #00000033, 0px 15px 40px #00000066',
+  },
   colors: {
     ...theme.colors,
     gray: {

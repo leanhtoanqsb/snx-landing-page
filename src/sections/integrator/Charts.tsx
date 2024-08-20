@@ -1,33 +1,18 @@
 'use client';
 
-import React, { PureComponent, ReactNode } from 'react';
+import React from 'react';
 import {
   Area,
   AreaChart,
   CartesianGrid,
-  Line,
-  LineChart,
-  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
   TooltipProps,
 } from 'recharts';
-import fetchIntegratorsData from '@/api/integrator';
-import Spartan from '@/svg/Spartan';
-import { Link } from '@chakra-ui/next-js';
 import { useQuery } from '@tanstack/react-query';
-import {
-  Box,
-  Button,
-  Flex,
-  Show,
-  Text,
-  Image,
-  Heading,
-  Card,
-} from '@chakra-ui/react';
+import { Box, Text, Card } from '@chakra-ui/react';
 import {
   compactNumber,
   formatLocalDate,

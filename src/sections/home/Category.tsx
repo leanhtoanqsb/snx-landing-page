@@ -58,8 +58,10 @@ export default function Category() {
     setState((prev) => ({ ...prev, category: e.target.value }));
   const onChangeProduct: ChangeEventHandler<HTMLSelectElement> = (e) =>
     setState((prev) => ({ ...prev, product: e.target.value }));
+
   const queryClient = getQueryClient();
   void queryClient.prefetchQuery(getIntegratorDataOption());
+
   return (
     <Box pt="100px" pb="200px" width="100%" id="category" position="relative">
       <Box position="relative" zIndex={1}>
@@ -171,6 +173,7 @@ function ListCategory({ state }: { state: State }) {
         .slice(0, 30);
     },
   });
+
   return (
     <>
       {mockData.map((data, index) => {
@@ -186,7 +189,7 @@ const mockData = [
     description:
       'Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity. Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity. Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity.',
     imageUri: '',
-    link: '',
+    link: '/integrator/kwenta',
     tag: 'perp',
   },
   {
@@ -194,7 +197,7 @@ const mockData = [
     description:
       'Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity.',
     imageUri: '',
-    link: '',
+    link: '/integrator/kwenta',
     tag: 'perp',
   },
   {
@@ -202,7 +205,7 @@ const mockData = [
     description:
       'Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity.',
     imageUri: '',
-    link: '',
+    link: '/integrator/kwenta',
     tag: 'perp',
   },
   {
@@ -210,7 +213,7 @@ const mockData = [
     description:
       'Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity. Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity.',
     imageUri: '',
-    link: '',
+    link: '/integrator/kwenta',
     tag: 'perp',
   },
   {
@@ -218,7 +221,7 @@ const mockData = [
     description:
       'Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity.',
     imageUri: '',
-    link: '',
+    link: '/integrator/kwenta',
     tag: 'perp',
   },
   {
@@ -226,7 +229,7 @@ const mockData = [
     description:
       'Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity.',
     imageUri: '',
-    link: '',
+    link: '/integrator/kwenta',
     tag: 'perp',
   },
   {
@@ -234,7 +237,7 @@ const mockData = [
     description:
       'Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity. Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity.',
     imageUri: '',
-    link: '',
+    link: '/integrator/kwenta',
     tag: 'perp',
   },
   {
@@ -242,7 +245,7 @@ const mockData = [
     description:
       'Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity.',
     imageUri: '',
-    link: '',
+    link: '/integrator/kwenta',
     tag: 'perp',
   },
   {
@@ -250,7 +253,7 @@ const mockData = [
     description:
       'Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity.',
     imageUri: '',
-    link: '',
+    link: '/integrator/kwenta',
     tag: 'perp',
   },
   {
@@ -258,7 +261,7 @@ const mockData = [
     description:
       'Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity. Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity.',
     imageUri: '',
-    link: '',
+    link: '/integrator/kwenta',
     tag: 'perp',
   },
   {
@@ -266,7 +269,7 @@ const mockData = [
     description:
       'Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity.',
     imageUri: '',
-    link: '',
+    link: '/integrator/kwenta',
     tag: 'perp',
   },
   {
@@ -274,7 +277,7 @@ const mockData = [
     description:
       'Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity.',
     imageUri: '',
-    link: '',
+    link: '/integrator/kwenta',
     tag: 'perp',
   },
 ];

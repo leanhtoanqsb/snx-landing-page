@@ -10,7 +10,7 @@ export default async function fetchIntegratorsData() {
       INTEGRATORS_VOLUME_URL
     );
     const integratorsVolume = data.sort(
-      (a, b) => dayjs(a.date).utc().valueOf() - dayjs(b.date).utc().valueOf()
+      (a, b) => dayjs(b.date).utc().valueOf() - dayjs(a.date).utc().valueOf()
     );
 
     // Get the integrator volume for the latest date

@@ -1,4 +1,6 @@
+import { getQueryClient } from '@/app/getQueryClient';
 import { IntegratorCard } from '@/components/IntergratorCard';
+import { getIntegratorDataOption } from '@/queries/integrators';
 import Spartan from '@/svg/Spartan';
 import { Link } from '@chakra-ui/next-js';
 import {
@@ -11,8 +13,53 @@ import {
   Heading,
   Select,
 } from '@chakra-ui/react';
+import {
+  dehydrate,
+  HydrationBoundary,
+  useQueries,
+  useQuery,
+} from '@tanstack/react-query';
+import { ChangeEventHandler, ReactNode, useState } from 'react';
+
+type SelectOption = { label: ReactNode; value: string };
+type State = { chain: string; category: string; product: string };
+
+const CHAIN_OPTIONS: SelectOption[] = [
+  { label: 'All Network', value: 'all' },
+  { label: 'Mainet', value: 'mainet' },
+  { label: 'Base', value: 'base' },
+  { label: 'Optimistic', value: 'optimistic' },
+  { label: 'Arbitrum', value: 'arbitrum' },
+];
+const CATEGORY_OPTIONS: SelectOption[] = [
+  { label: 'All Categories', value: 'all' },
+  { label: 'Exchange', value: 'exchange' },
+  { label: 'Strategies', value: 'strategies' },
+  { label: 'Others', value: 'others' },
+];
+const PRODUCT_OPTIONS: SelectOption[] = [
+  { label: 'All Products', value: 'all' },
+  { label: 'Perpetual futures', value: 'perpetual_futures' },
+  { label: 'Degen markets', value: 'degen_markets' },
+  { label: 'Leveraged Tokens', value: 'leveraged_tokens' },
+  { label: 'Trading & LP vaults', value: 'trading_n_lp_vaults' },
+  { label: 'Others', value: 'others' },
+];
 
 export default function Category() {
+  const [state, setState] = useState<State>({
+    chain: CHAIN_OPTIONS[0].value,
+    category: CATEGORY_OPTIONS[0].value,
+    product: PRODUCT_OPTIONS[0].value,
+  });
+  const onChangeChain: ChangeEventHandler<HTMLSelectElement> = (e) =>
+    setState((prev) => ({ ...prev, chain: e.target.value }));
+  const onChangeCategory: ChangeEventHandler<HTMLSelectElement> = (e) =>
+    setState((prev) => ({ ...prev, category: e.target.value }));
+  const onChangeProduct: ChangeEventHandler<HTMLSelectElement> = (e) =>
+    setState((prev) => ({ ...prev, product: e.target.value }));
+  const queryClient = getQueryClient();
+  void queryClient.prefetchQuery(getIntegratorDataOption());
   return (
     <Box pt="100px" pb="200px" width="100%" id="category" position="relative">
       <Box position="relative" zIndex={1}>
@@ -38,20 +85,44 @@ export default function Category() {
         </Box>
         <Box mt="124px">
           <Flex gap="12px">
-            <Select value="option1" width="max-content">
-              <option value="option1">All Network</option>
-              <option value="option2">Option 2</option>
-              <option value="option3">Option 3</option>
+            <Select
+              value={state.chain}
+              onChange={onChangeChain}
+              width="max-content"
+            >
+              {CHAIN_OPTIONS.map((option) => {
+                return (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                );
+              })}
             </Select>
-            <Select value="option1" width="max-content">
-              <option value="option1">All Network</option>
-              <option value="option2">Option 2</option>
-              <option value="option3">Option 3</option>
+            <Select
+              value="option1"
+              onChange={onChangeCategory}
+              width="max-content"
+            >
+              {CATEGORY_OPTIONS.map((option) => {
+                return (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                );
+              })}
             </Select>
-            <Select value="option1" width="max-content">
-              <option value="option1">All Network</option>
-              <option value="option2">Option 2</option>
-              <option value="option3">Option 3</option>
+            <Select
+              value="option1"
+              onChange={onChangeProduct}
+              width="max-content"
+            >
+              {PRODUCT_OPTIONS.map((option) => {
+                return (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                );
+              })}
             </Select>
           </Flex>
         </Box>
@@ -68,6 +139,9 @@ export default function Category() {
           gridTemplateRows="290px"
           gap="24px"
         >
+          <HydrationBoundary state={dehydrate(queryClient)}>
+            <ListCategory state={state} />
+          </HydrationBoundary>
           {mockData.map((data, index) => {
             return <IntegratorCard key={index} {...data} />;
           })}
@@ -85,6 +159,24 @@ export default function Category() {
         filter="blur(250px)"
       />
     </Box>
+  );
+}
+
+function ListCategory({ state }: { state: State }) {
+  const { data } = useQuery({
+    ...getIntegratorDataOption(),
+    select(data) {
+      return data.integratorsVolume
+        ?.filter((_data) => !!_data.tracking_code.match(/Kwenta/i))
+        .slice(0, 30);
+    },
+  });
+  return (
+    <>
+      {mockData.map((data, index) => {
+        return <IntegratorCard key={index} {...data} />;
+      })}
+    </>
   );
 }
 

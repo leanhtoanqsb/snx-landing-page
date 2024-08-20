@@ -28,17 +28,21 @@ import {
   Heading,
   Card,
 } from '@chakra-ui/react';
-import { formatLocalDate, formatNumber } from '@/utils/formatters/number';
+import {
+  compactNumber,
+  formatLocalDate,
+  formatNumber,
+} from '@/utils/formatters/number';
+import { getIntegratorDataOption } from '@/queries/integrators';
 
 const CHART_SYNC_ID = 'intergrator-chart';
 
 export default function Charts() {
   const { data } = useQuery({
-    queryKey: ['integrators-data'],
-    queryFn: fetchIntegratorsData,
+    ...getIntegratorDataOption(),
     select(data) {
       return data.integratorsVolume
-        ?.filter((_data) => !!_data.tracking_code.includes('Kwenta'))
+        ?.filter((_data) => !!_data.tracking_code.match(/Kwenta/i))
         .slice(0, 30);
     },
   });
@@ -53,9 +57,17 @@ export default function Charts() {
       >
         <AreaChart data={data} syncId={CHART_SYNC_ID}>
           <CartesianGrid />
-          <YAxis dataKey="daily_fee" axisLine={false} tickLine={false} />
+          <YAxis
+            dataKey="tuu"
+            axisLine={false}
+            tickLine={false}
+            tickFormatter={(value) => {
+              return `$${compactNumber({ num: value, digits: 1 })}`;
+            }}
+            width={80}
+          />
           <XAxis
-            dataKey="day"
+            dataKey="date"
             tickLine={false}
             tickFormatter={(value) => {
               return `${formatLocalDate(value, 'MM/DD')}`;
@@ -64,7 +76,7 @@ export default function Charts() {
             interval={'equidistantPreserveStart'}
           />
           <Tooltip content={CustomTooltip} />
-          <Area type="monotone" dataKey="daily_fee" strokeWidth={3} />
+          <Area type="monotone" dataKey="tuu" strokeWidth={3} />
         </AreaChart>
       </ChartContainer>
       <Box
@@ -78,9 +90,17 @@ export default function Charts() {
         <ChartContainer chartLabel="Daily Volume" curveColor="pink.400">
           <AreaChart data={data} syncId={CHART_SYNC_ID}>
             <CartesianGrid />
-            <YAxis dataKey="daily_fee" axisLine={false} tickLine={false} />
+            <YAxis
+              dataKey="volume"
+              axisLine={false}
+              tickLine={false}
+              tickFormatter={(value) => {
+                return `$${compactNumber({ num: value, digits: 1 })}`;
+              }}
+              width={80}
+            />
             <XAxis
-              dataKey="day"
+              dataKey="date"
               tickLine={false}
               tickFormatter={(value) => {
                 return `${formatLocalDate(value, 'MM/DD')}`;
@@ -89,7 +109,7 @@ export default function Charts() {
               interval={'equidistantPreserveStart'}
             />
             <Tooltip content={CustomTooltip} />
-            <Area type="monotone" dataKey="daily_fee" strokeWidth={3} />
+            <Area type="monotone" dataKey="volume" strokeWidth={3} />
           </AreaChart>
         </ChartContainer>
 
@@ -97,9 +117,17 @@ export default function Charts() {
         <ChartContainer chartLabel="Daily Fees" curveColor="pink.400">
           <AreaChart data={data} syncId={CHART_SYNC_ID}>
             <CartesianGrid />
-            <YAxis dataKey="daily_fee" axisLine={false} tickLine={false} />
+            <YAxis
+              dataKey="fees"
+              axisLine={false}
+              tickLine={false}
+              tickFormatter={(value) => {
+                return `$${compactNumber({ num: value, digits: 1 })}`;
+              }}
+              width={80}
+            />
             <XAxis
-              dataKey="day"
+              dataKey="date"
               tickLine={false}
               tickFormatter={(value) => {
                 return `${formatLocalDate(value, 'MM/DD')}`;
@@ -108,7 +136,7 @@ export default function Charts() {
               interval={'equidistantPreserveStart'}
             />
             <Tooltip content={CustomTooltip} />
-            <Area type="monotone" dataKey="daily_fee" strokeWidth={3} />
+            <Area type="monotone" dataKey="fees" strokeWidth={3} />
           </AreaChart>
         </ChartContainer>
 
@@ -116,9 +144,17 @@ export default function Charts() {
         <ChartContainer chartLabel="Daily Active Users" curveColor="pink.400">
           <AreaChart data={data} syncId={CHART_SYNC_ID}>
             <CartesianGrid />
-            <YAxis dataKey="daily_fee" axisLine={false} tickLine={false} />
+            <YAxis
+              dataKey="dauu"
+              axisLine={false}
+              tickLine={false}
+              tickFormatter={(value) => {
+                return `${compactNumber({ num: value, digits: 1 })}`;
+              }}
+              width={80}
+            />
             <XAxis
-              dataKey="day"
+              dataKey="date"
               tickLine={false}
               tickFormatter={(value) => {
                 return `${formatLocalDate(value, 'MM/DD')}`;
@@ -127,16 +163,24 @@ export default function Charts() {
               interval={'equidistantPreserveStart'}
             />
             <Tooltip content={<CustomTooltip />} />
-            <Area type="monotone" dataKey="daily_fee" strokeWidth={3} />
+            <Area type="monotone" dataKey="dauu" strokeWidth={3} />
           </AreaChart>
         </ChartContainer>
         {/* chart OI */}
         <ChartContainer chartLabel="Daily OI" curveColor="pink.400">
           <AreaChart data={data} syncId={CHART_SYNC_ID}>
             <CartesianGrid />
-            <YAxis dataKey="daily_fee" axisLine={false} tickLine={false} />
+            <YAxis
+              dataKey="OI"
+              axisLine={false}
+              tickLine={false}
+              tickFormatter={(value) => {
+                return `$${compactNumber({ num: value, digits: 1 })}`;
+              }}
+              width={80}
+            />
             <XAxis
-              dataKey="day"
+              dataKey="date"
               tickLine={false}
               tickFormatter={(value) => {
                 return `${formatLocalDate(value, 'MM/DD')}`;
@@ -145,7 +189,7 @@ export default function Charts() {
               interval={'equidistantPreserveStart'}
             />
             <Tooltip content={<CustomTooltip />} />
-            <Area type="monotone" dataKey="daily_fee" strokeWidth={3} />
+            <Area type="monotone" dataKey="OI" strokeWidth={3} />
           </AreaChart>
         </ChartContainer>
       </Box>

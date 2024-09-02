@@ -1,42 +1,32 @@
+import { SectionParagraph } from '@/components/@ui/Paragraph';
 import { Box, Flex, Image, Text } from '@chakra-ui/react';
 
 export default function Partners() {
   return (
-    <Box py={{ base: '60px', lg: '100px' }} width="100%">
-      <Text
-        color="gray.500"
-        fontSize="16px"
-        lineHeight="24px"
-        fontFamily="heading"
-      >
-        INFRASTRUCTURE PARTNERS
-      </Text>
+    <Box width="100%">
+      <SectionParagraph mb="24px">INFRASTRUCTURE PARTNERS</SectionParagraph>
       <Flex
         w="100%"
-        justifyContent={{ base: 'start', xl: 'space-between' }}
-        alignItems="center"
-        flexWrap={{ base: 'wrap', xl: 'nowrap' }}
         sx={{
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          rowGap: '0px',
+          columnGap: '32px',
           '& > img': {
+            height: '54px',
             transition: '0.3s',
             _hover: { transform: 'scale(1.1)' },
           },
         }}
       >
-        <Image alt="blocknative" src="/blocknative.svg" mr="20px" mt="16px" />
-        <Image alt="cannon" src="/cannon.svg" mr="20px" mt="16px" />
-        <Image alt="chainlink" src="/chainlinkText.svg" mr="20px" mt="16px" />
-        <Image alt="infura" src="/infura.svg" mr="20px" mt="16px" />
-        <Image
-          height="54px"
-          alt="iosiro"
-          src="/iosiro.svg"
-          mr="20px"
-          mt="16px"
-        />
-        <Image alt="macro" src="/macro.svg" mr="20px" mt="16px" />
-        <Image alt="optimism" src="/optimism.svg" mr="20px" mt="16px" />
-        <Image alt="pyth" src="/pythText.svg" mr="20px" mt="16px" />
+        <Image alt="blocknative" src="/blocknative.svg" />
+        <Image alt="cannon" src="/cannon.svg" />
+        <Image alt="chainlink" src="/chainlinkText.svg" />
+        <Image alt="infura" src="/infura.svg" />
+        <Image alt="iosiro" src="/iosiro.svg" />
+        <Image alt="macro" src="/macro.svg" />
+        <Image alt="optimism" src="/optimism.svg" />
+        <Image alt="pyth" src="/pythText.svg" />
       </Flex>
     </Box>
   );

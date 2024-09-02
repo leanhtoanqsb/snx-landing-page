@@ -10,6 +10,10 @@ import {
   XAxis,
   YAxis,
   TooltipProps,
+  ComposedChart,
+  Legend,
+  Bar,
+  Line,
 } from 'recharts';
 import { useQuery } from '@tanstack/react-query';
 import { Box, Text, Card } from '@chakra-ui/react';
@@ -19,6 +23,7 @@ import {
   formatNumber,
 } from '@/utils/formatters/number';
 import { getIntegratorDataOption } from '@/queries/integrators';
+import { IntegratorsVolumeData } from '@/components/types';
 
 const CHART_SYNC_ID = 'intergrator-chart';
 
@@ -35,35 +40,16 @@ export default function Charts() {
     <Box pt="100px" pb="200px" width="100%" id="hero" position="relative">
       {/* Chart TVL */}
       <ChartContainer
+        data={data}
+        dataKey={['tuu', 'tuu']}
         chartLabel="TVL"
         chartHeight="354px"
         curveColor="cyan.500"
         areaColor="cyan.500"
-      >
-        <AreaChart data={data} syncId={CHART_SYNC_ID}>
-          <CartesianGrid />
-          <YAxis
-            dataKey="tuu"
-            axisLine={false}
-            tickLine={false}
-            tickFormatter={(value) => {
-              return `$${compactNumber({ num: value, digits: 1 })}`;
-            }}
-            width={80}
-          />
-          <XAxis
-            dataKey="date"
-            tickLine={false}
-            tickFormatter={(value) => {
-              return `${formatLocalDate(value, 'MM/DD')}`;
-            }}
-            tickMargin={16}
-            interval={'equidistantPreserveStart'}
-          />
-          <Tooltip content={CustomTooltip} />
-          <Area type="monotone" dataKey="tuu" strokeWidth={3} />
-        </AreaChart>
-      </ChartContainer>
+        yTickFormatter={(value) => {
+          return `$${compactNumber({ num: value, digits: 1 })}`;
+        }}
+      />
       <Box
         mt="24px"
         display="grid"
@@ -72,111 +58,46 @@ export default function Charts() {
         gap="24px"
       >
         {/* Chart daily volume */}
-        <ChartContainer chartLabel="Daily Volume" curveColor="pink.400">
-          <AreaChart data={data} syncId={CHART_SYNC_ID}>
-            <CartesianGrid />
-            <YAxis
-              dataKey="volume"
-              axisLine={false}
-              tickLine={false}
-              tickFormatter={(value) => {
-                return `$${compactNumber({ num: value, digits: 1 })}`;
-              }}
-              width={80}
-            />
-            <XAxis
-              dataKey="date"
-              tickLine={false}
-              tickFormatter={(value) => {
-                return `${formatLocalDate(value, 'MM/DD')}`;
-              }}
-              tickMargin={16}
-              interval={'equidistantPreserveStart'}
-            />
-            <Tooltip content={CustomTooltip} />
-            <Area type="monotone" dataKey="volume" strokeWidth={3} />
-          </AreaChart>
-        </ChartContainer>
+        <ChartContainer
+          data={data}
+          dataKey={['volume', 'volume']}
+          chartLabel="Daily Volume"
+          curveColor="pink.400"
+          yTickFormatter={(value) => {
+            return `$${compactNumber({ num: value, digits: 1 })}`;
+          }}
+        />
 
         {/* Chart daily fees */}
-        <ChartContainer chartLabel="Daily Fees" curveColor="pink.400">
-          <AreaChart data={data} syncId={CHART_SYNC_ID}>
-            <CartesianGrid />
-            <YAxis
-              dataKey="fees"
-              axisLine={false}
-              tickLine={false}
-              tickFormatter={(value) => {
-                return `$${compactNumber({ num: value, digits: 1 })}`;
-              }}
-              width={80}
-            />
-            <XAxis
-              dataKey="date"
-              tickLine={false}
-              tickFormatter={(value) => {
-                return `${formatLocalDate(value, 'MM/DD')}`;
-              }}
-              tickMargin={16}
-              interval={'equidistantPreserveStart'}
-            />
-            <Tooltip content={CustomTooltip} />
-            <Area type="monotone" dataKey="fees" strokeWidth={3} />
-          </AreaChart>
-        </ChartContainer>
+        <ChartContainer
+          data={data}
+          dataKey={['fees', 'fees']}
+          chartLabel="Daily Fees"
+          curveColor="pink.400"
+          yTickFormatter={(value) => {
+            return `$${compactNumber({ num: value, digits: 1 })}`;
+          }}
+        />
 
         {/* chart active user */}
-        <ChartContainer chartLabel="Daily Active Users" curveColor="pink.400">
-          <AreaChart data={data} syncId={CHART_SYNC_ID}>
-            <CartesianGrid />
-            <YAxis
-              dataKey="dauu"
-              axisLine={false}
-              tickLine={false}
-              tickFormatter={(value) => {
-                return `${compactNumber({ num: value, digits: 1 })}`;
-              }}
-              width={80}
-            />
-            <XAxis
-              dataKey="date"
-              tickLine={false}
-              tickFormatter={(value) => {
-                return `${formatLocalDate(value, 'MM/DD')}`;
-              }}
-              tickMargin={16}
-              interval={'equidistantPreserveStart'}
-            />
-            <Tooltip content={<CustomTooltip />} />
-            <Area type="monotone" dataKey="dauu" strokeWidth={3} />
-          </AreaChart>
-        </ChartContainer>
-        {/* chart OI */}
-        <ChartContainer chartLabel="Daily OI" curveColor="pink.400">
-          <AreaChart data={data} syncId={CHART_SYNC_ID}>
-            <CartesianGrid />
-            <YAxis
-              dataKey="OI"
-              axisLine={false}
-              tickLine={false}
-              tickFormatter={(value) => {
-                return `$${compactNumber({ num: value, digits: 1 })}`;
-              }}
-              width={80}
-            />
-            <XAxis
-              dataKey="date"
-              tickLine={false}
-              tickFormatter={(value) => {
-                return `${formatLocalDate(value, 'MM/DD')}`;
-              }}
-              tickMargin={16}
-              interval={'equidistantPreserveStart'}
-            />
-            <Tooltip content={<CustomTooltip />} />
-            <Area type="monotone" dataKey="OI" strokeWidth={3} />
-          </AreaChart>
-        </ChartContainer>
+        <ChartContainer
+          data={data}
+          dataKey={['dauu', 'dauu']}
+          chartLabel="Daily Active Users"
+          curveColor="pink.400"
+          yTickFormatter={(value) => {
+            return `${compactNumber({ num: value, digits: 1 })}`;
+          }}
+        />
+        <ChartContainer
+          data={data}
+          dataKey={['OI', 'OI']}
+          chartLabel="Daily OI"
+          curveColor="pink.400"
+          yTickFormatter={(value) => {
+            return `$${compactNumber({ num: value, digits: 1 })}`;
+          }}
+        />
       </Box>
 
       <Box
@@ -194,13 +115,17 @@ export default function Charts() {
 }
 
 function ChartContainer({
-  children,
+  dataKey,
+  data,
+  yTickFormatter,
   chartHeight = '100%',
   curveColor,
   areaColor = 'transparent',
   chartLabel,
 }: {
-  children: JSX.Element;
+  dataKey: string[];
+  data: IntegratorsVolumeData[] | undefined;
+  yTickFormatter: (value: any) => string;
   chartHeight?: string;
   curveColor: string;
   areaColor?: string;
@@ -235,7 +160,26 @@ function ChartContainer({
         {chartLabel}
       </Text>
       <ResponsiveContainer width="100%" height="100%">
-        {children}
+        <ComposedChart data={data}>
+          <CartesianGrid />
+
+          <XAxis
+            dataKey="date"
+            tickLine={false}
+            tickFormatter={(value) => {
+              return `${formatLocalDate(value, 'MM/DD')}`;
+            }}
+            tickMargin={16}
+            interval={'equidistantPreserveStart'}
+          />
+          <YAxis tickFormatter={yTickFormatter} />
+          <Tooltip />
+          <Legend wrapperStyle={{ top: -24, left: 0 }} />
+          {/* <Bar dataKey={dataKey[0]} barSize={20} fill="#413ea0" />
+          <Line type="monotone" dataKey={dataKey[1]} stroke="#ff7300" /> */}
+          <Bar dataKey={dataKey[0]} barSize={20} />
+          <Line type="linear" dataKey={dataKey[1]} />
+        </ComposedChart>
       </ResponsiveContainer>
     </Card>
   );

@@ -1,11 +1,19 @@
-import { Box, Divider, Flex, FlexProps } from '@chakra-ui/react';
-import { PropsWithChildren, ReactNode } from 'react';
+import { Box, Divider, Flex } from '@chakra-ui/react';
+import { ReactNode } from 'react';
 import Footer from '@/components/Footer';
+import IntegratorHeader from '../IntegratorHeader';
 
 export default function PageLayout({ children }: { children: ReactNode }) {
   return (
     <>
-      <Wrapper>{children}</Wrapper>
+      <Wrapper>
+        <Box sx={{ position: 'relative', zIndex: 1 }}>
+          <Box sx={{ position: 'absolute', top: 0, left: 0 }}>
+            <IntegratorHeader />
+          </Box>
+        </Box>
+        {children}
+      </Wrapper>
       <Divider minW="100%" borderColor="gray.900" />
       <Wrapper>
         <Footer />
@@ -14,7 +22,7 @@ export default function PageLayout({ children }: { children: ReactNode }) {
   );
 }
 
-function Wrapper({ children, ...props }: PropsWithChildren) {
+function Wrapper({ children }: { children: ReactNode }) {
   return (
     <Flex minW="100%" bg="navy.900" justifyContent="center" position="relative">
       <Box

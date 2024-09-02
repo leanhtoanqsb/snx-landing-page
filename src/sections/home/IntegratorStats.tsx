@@ -1,8 +1,8 @@
 import { getQueryClient } from '@/app/getQueryClient';
+import { SectionHeading } from '@/components/@ui/Heading';
+import { SectionParagraph } from '@/components/@ui/Paragraph';
 import { getIntegratorDataOption } from '@/queries/integrators';
-import Spartan from '@/svg/Spartan';
 import { formatNumber } from '@/utils/formatters/number';
-import { Link } from '@chakra-ui/next-js';
 import {
   Box,
   Heading,
@@ -22,16 +22,13 @@ export default function IntegratorStats() {
   const queryClient = getQueryClient();
   void queryClient.prefetchQuery(getIntegratorDataOption());
   return (
-    <Box py="100px" width="100%" id="integrator-stats" position="relative">
-      <Heading
-        fontSize={{ base: '48px', md: '60px' }}
-        maxW={{ md: '483px' }}
-        as="h2"
-        color="gray.50"
-        mb="24px"
-      >
-        Integrator Stats
-      </Heading>
+    <Box width="100%" id="integrator-stats" position="relative">
+      <SectionHeading mb="16px">Integrator Stats</SectionHeading>
+      <SectionParagraph mb="24px" maxW="700px">
+        Explore the growing ecosystem of decentralized apps built on top of
+        Synthetix liquidity. The Synthetix ecosystem is comprised of derivatives
+        exchanges, sUSD utility, and more
+      </SectionParagraph>
       <HydrationBoundary state={dehydrate(queryClient)}>
         <StatsTable />
       </HydrationBoundary>

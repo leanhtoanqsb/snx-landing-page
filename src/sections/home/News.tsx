@@ -1,44 +1,20 @@
+import { SectionHeading } from '@/components/@ui/Heading';
+import { SectionParagraph } from '@/components/@ui/Paragraph';
 import { NewsCard } from '@/components/NewsCard';
-import Spartan from '@/svg/Spartan';
-import { Link } from '@chakra-ui/next-js';
-import {
-  Box,
-  Button,
-  Flex,
-  Show,
-  Text,
-  Image,
-  Heading,
-  Select,
-} from '@chakra-ui/react';
+import { Box, Text, Heading } from '@chakra-ui/react';
 
 export default function News() {
   return (
-    <Box pt="100px" pb="191px" width="100%" id="category" position="relative">
+    <Box width="100%" id="news" position="relative">
       <Box position="relative" zIndex={1}>
         <Box maxW="800px">
-          <Heading
-            fontSize={{ base: '48px', md: '60px' }}
-            maxW={{ md: '483px' }}
-            as="h2"
-            color="gray.50"
-            mb="16px"
-          >
-            Latest News
-          </Heading>
-          <Text
-            mb="24px"
-            fontSize="16px"
-            lineHeight="24px"
-            color="gray.500"
-            fontWeight={400}
-          >
+          <SectionHeading mb="16px">Latest News</SectionHeading>
+          <SectionParagraph mb="24px">
             Multiple front ends have chosen to integrate Synthetix&apos;s
             composable and permissionless smart contracts
-          </Text>
+          </SectionParagraph>
         </Box>
         <Box
-          pt="100px"
           display="grid"
           width="100%"
           gridTemplateColumns={{
@@ -53,16 +29,6 @@ export default function News() {
           })}
         </Box>
       </Box>
-      <Box
-        position="absolute"
-        bgGradient="linear(to-tr, green.500, cyan.500)"
-        width="618px"
-        height="694px"
-        left="-492px"
-        top="238px"
-        borderRadius="100%"
-        filter="blur(250px)"
-      />
     </Box>
   );
 }

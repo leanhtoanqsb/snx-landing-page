@@ -6,7 +6,10 @@ import { getIntegratorDataOption } from '@/queries/integrators';
 import Charts from '@/sections/integrator/Charts';
 import Description from '@/sections/integrator/Description';
 import IntegratorHero from '@/sections/integrator/IntegratorHero';
+import { ArrowLeftIcon } from '@/svg/ArrowLeftIcon';
+import { Flex, Text } from '@chakra-ui/react';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
+import Link from 'next/link';
 
 export default function Page() {
   const queryClient = getQueryClient();
@@ -14,6 +17,18 @@ export default function Page() {
 
   return (
     <PageLayout>
+      <Flex
+        as={Link}
+        href="/"
+        mt="65px"
+        mb="24px"
+        sx={{ alignItems: 'center', gap: '8px', color: 'cyan.500' }}
+      >
+        <ArrowLeftIcon />{' '}
+        <Text sx={{ fontSize: '14px', fontWeight: 'bold', lineHeight: '20px' }}>
+          Back
+        </Text>
+      </Flex>
       <IntegratorHero />
       <Description />
       <HydrationBoundary state={dehydrate(queryClient)}>

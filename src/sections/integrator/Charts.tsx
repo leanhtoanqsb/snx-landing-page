@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Area,
   AreaChart,
@@ -16,7 +16,7 @@ import {
   Line,
 } from 'recharts';
 import { useQuery } from '@tanstack/react-query';
-import { Box, Text, Card } from '@chakra-ui/react';
+import { Box, Text, Card, Flex } from '@chakra-ui/react';
 import {
   compactNumber,
   formatLocalDate,
@@ -24,8 +24,20 @@ import {
 } from '@/utils/formatters/number';
 import { getIntegratorDataOption } from '@/queries/integrators';
 import { IntegratorsVolumeData } from '@/components/types';
+import { Props } from 'recharts/types/component/Legend';
+import { ContentType } from 'recharts/types/component/DefaultLegendContent';
 
 const CHART_SYNC_ID = 'intergrator-chart';
+const CUMMULATIVE_VALUE_COLOR = '#F4BB40';
+const VALUE_COLOR = 'rgba(255, 255, 255, 0.24)';
+
+type ChartData = IntegratorsVolumeData & {
+  cummulativeVolume: number;
+  cummulativeOI: number;
+  cummulativeFees: number;
+  cummulativeDauu: number;
+  cummulativeTuu: number;
+};
 
 export default function Charts() {
   const { data } = useQuery({
@@ -33,7 +45,25 @@ export default function Charts() {
     select(data) {
       return data.integratorsVolume
         ?.filter((_data) => !!_data.tracking_code.match(/Kwenta/i))
-        .slice(0, 30);
+        .slice(0, 30)
+        .reduce<ChartData[]>((result, _data) => {
+          const chartData = _data as ChartData;
+          const lastItem = result[result.length - 1];
+          return [
+            ...result,
+            {
+              ...chartData,
+              cummulativeVolume:
+                (lastItem?.cummulativeVolume ?? 0) + chartData.volume,
+              cummulativeOI: (lastItem?.cummulativeOI ?? 0) + chartData.OI,
+              cummulativeDauu:
+                (lastItem?.cummulativeDauu ?? 0) + chartData.dauu,
+              cummulativeTuu: (lastItem?.cummulativeTuu ?? 0) + chartData.tuu,
+              cummulativeFees:
+                (lastItem?.cummulativeFees ?? 0) + chartData.fees,
+            },
+          ];
+        }, []);
     },
   });
   return (
@@ -41,10 +71,10 @@ export default function Charts() {
       {/* Chart TVL */}
       <ChartContainer
         data={data}
-        dataKey={['tuu', 'tuu']}
+        dataKey={['tuu', 'cummulativeTuu']}
         chartLabel="TVL"
         chartHeight="354px"
-        curveColor="cyan.500"
+        curveColor={CUMMULATIVE_VALUE_COLOR}
         areaColor="cyan.500"
         yTickFormatter={(value) => {
           return `$${compactNumber({ num: value, digits: 1 })}`;
@@ -60,9 +90,9 @@ export default function Charts() {
         {/* Chart daily volume */}
         <ChartContainer
           data={data}
-          dataKey={['volume', 'volume']}
+          dataKey={['volume', 'cummulativeVolume']}
           chartLabel="Daily Volume"
-          curveColor="pink.400"
+          curveColor={CUMMULATIVE_VALUE_COLOR}
           yTickFormatter={(value) => {
             return `$${compactNumber({ num: value, digits: 1 })}`;
           }}
@@ -71,9 +101,9 @@ export default function Charts() {
         {/* Chart daily fees */}
         <ChartContainer
           data={data}
-          dataKey={['fees', 'fees']}
+          dataKey={['fees', 'cummulativeFees']}
           chartLabel="Daily Fees"
-          curveColor="pink.400"
+          curveColor={CUMMULATIVE_VALUE_COLOR}
           yTickFormatter={(value) => {
             return `$${compactNumber({ num: value, digits: 1 })}`;
           }}
@@ -82,18 +112,18 @@ export default function Charts() {
         {/* chart active user */}
         <ChartContainer
           data={data}
-          dataKey={['dauu', 'dauu']}
+          dataKey={['dauu', 'cummulativeDauu']}
           chartLabel="Daily Active Users"
-          curveColor="pink.400"
+          curveColor={CUMMULATIVE_VALUE_COLOR}
           yTickFormatter={(value) => {
             return `${compactNumber({ num: value, digits: 1 })}`;
           }}
         />
         <ChartContainer
           data={data}
-          dataKey={['OI', 'OI']}
+          dataKey={['OI', 'cummulativeOI']}
           chartLabel="Daily OI"
-          curveColor="pink.400"
+          curveColor={CUMMULATIVE_VALUE_COLOR}
           yTickFormatter={(value) => {
             return `$${compactNumber({ num: value, digits: 1 })}`;
           }}
@@ -131,6 +161,7 @@ function ChartContainer({
   areaColor?: string;
   chartLabel: string;
 }) {
+  const [currentTime, setCurrentTime] = useState<TimeFilter>('1m');
   return (
     <Card
       variant="filled"
@@ -142,25 +173,39 @@ function ChartContainer({
         height: chartHeight,
         '.recharts-cartesian-grid': {
           '.recharts-cartesian-grid-vertical': { display: 'none' },
+          '.recharts-cartesian-grid-horizontal': { display: 'none' },
         },
-        '.recharts-layer': {
-          '.recharts-area-curve': { stroke: curveColor, fillOpacity: '1' },
-          '.recharts-area-area': { fill: areaColor, fillOpacity: '0.1' },
-          '.recharts-cartesian-axis-tick-value': { fill: 'gray.500' },
-        },
+        '.recharts-line-curve': { stroke: curveColor, fillOpacity: '1' },
+        '.recharts-area-area': { fill: areaColor, fillOpacity: '0.1' },
+        '.recharts-cartesian-axis-tick-value': { fill: 'gray.500' },
+        '.recharts-bar-rectangle': { fill: 'whiteAlpha.400' },
+        '.recharts-legend-item-text': { color: 'gray.500 !important' },
+        '.recharts-line-dots > *': { fill: curveColor, stroke: curveColor },
       }}
     >
-      <Text
-        fontSize="20px"
-        lineHeight="28px"
-        color="gray.50"
-        mb="24px"
-        fontWeight={500}
+      <Flex
+        mb="56px"
+        sx={{
+          width: '100%',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
       >
-        {chartLabel}
-      </Text>
+        <Text
+          fontSize="20px"
+          lineHeight="28px"
+          color="gray.50"
+          fontWeight={500}
+        >
+          {chartLabel}
+        </Text>
+        <TimeFilter
+          currentTime={currentTime}
+          onChangeTime={(time) => setCurrentTime(time)}
+        />
+      </Flex>
       <ResponsiveContainer width="100%" height="100%">
-        <ComposedChart data={data}>
+        <ComposedChart data={data} margin={{ left: 20 }}>
           <CartesianGrid />
 
           <XAxis
@@ -172,16 +217,98 @@ function ChartContainer({
             tickMargin={16}
             interval={'equidistantPreserveStart'}
           />
-          <YAxis tickFormatter={yTickFormatter} />
-          <Tooltip />
-          <Legend wrapperStyle={{ top: -24, left: 0 }} />
+          {/* <YAxis tickFormatter={yTickFormatter} /> */}
+          <Tooltip content={<CustomTooltip />} />
+          <Legend
+            wrapperStyle={{ top: -40, left: 0 }}
+            align="left"
+            type="circle"
+            payload={[
+              {
+                id: dataKey[0],
+                value: TITLE_MAPPING[dataKey[0]],
+                type: 'circle',
+                color: VALUE_COLOR,
+                dataKey: dataKey[0],
+              },
+              {
+                id: dataKey[1],
+                value: 'CUMMULATIVE',
+                type: 'circle',
+                color: CUMMULATIVE_VALUE_COLOR,
+                dataKey: dataKey[1],
+              },
+            ]}
+            content={renderLegend}
+          />
           {/* <Bar dataKey={dataKey[0]} barSize={20} fill="#413ea0" />
           <Line type="monotone" dataKey={dataKey[1]} stroke="#ff7300" /> */}
-          <Bar dataKey={dataKey[0]} barSize={20} />
+          <Bar dataKey={dataKey[0]} maxBarSize={40} fill="" />
           <Line type="linear" dataKey={dataKey[1]} />
         </ComposedChart>
       </ResponsiveContainer>
     </Card>
+  );
+}
+
+const renderLegend: ContentType = (props) => {
+  return (
+    <Flex sx={{ alignItems: 'center', gap: '24px' }}>
+      {props.payload?.map((payload) => {
+        return (
+          <Flex key={payload.id} sx={{ alignItems: 'center', gap: '8px' }}>
+            <Box
+              sx={{
+                width: '8px',
+                height: '8px',
+                borderRadius: '8px',
+                bg: payload?.color,
+              }}
+            />
+            <Box sx={{ fontSize: '12px', lineHeight: '16px' }}>
+              {(payload.value as string) ?? ''}
+            </Box>
+          </Flex>
+        );
+      })}
+    </Flex>
+  );
+};
+
+type TimeFilter = '1y' | '1m';
+function TimeFilter({
+  currentTime,
+  onChangeTime,
+}: {
+  currentTime: TimeFilter;
+  onChangeTime: (time: TimeFilter) => void;
+}) {
+  return (
+    <Flex>
+      {(['1y', '1m'] as TimeFilter[]).map((time) => {
+        const isActive = currentTime === time;
+        return (
+          <Box
+            role="button"
+            onClick={() => onChangeTime(time)}
+            sx={{
+              width: '50px',
+              height: '28px',
+              borderRadius: '50px',
+              color: isActive ? 'gray.50' : 'gray.500',
+              bg: isActive ? 'whiteAlpha.300' : 'transparent',
+              textTransform: 'uppercase',
+              textAlign: 'center',
+              lineHeight: '28px',
+              fontSize: '12px',
+              fontWeight: isActive ? 'bold' : 'normal',
+            }}
+          >
+            {time}
+          </Box>
+        );
+      })}
+    </Flex>
   );
 }
 function CustomTooltip({
@@ -192,13 +319,49 @@ function CustomTooltip({
   if (active && payload && payload.length) {
     return (
       <Card variant="filled" sx={{ boxShadow: 'dark', p: '8px' }}>
-        <Text color="gray.50">{formatLocalDate(payload[0].payload?.day)}</Text>
-        <Text color="gray.50">
-          {formatNumber(payload[0].value, { prefix: '$' })}
+        <Text color="gray.500">
+          Date:{' '}
+          <Box as="span" color="gray.500">
+            {formatLocalDate(payload[0].payload?.date)}
+          </Box>
         </Text>
+        {payload[0].dataKey && (
+          <Text color="gray.500">
+            {TITLE_MAPPING[payload[0].dataKey]}
+            {': '}
+            <Box as="span" color="gray.50">
+              {formatNumber(payload[0].value, {
+                prefix: payload[1].dataKey === 'dauu' ? '' : '$',
+              })}
+            </Box>
+          </Text>
+        )}
+        {payload[1].dataKey && (
+          <Text color="gray.500">
+            {TITLE_MAPPING[payload[1].dataKey]}
+            {': '}
+            <Box as="span" color={CUMMULATIVE_VALUE_COLOR}>
+              {formatNumber(payload[1].value, {
+                prefix: payload[1].dataKey === 'cummulativeDauu' ? '' : '$',
+              })}
+            </Box>
+          </Text>
+        )}
       </Card>
     );
   }
 
   return null;
 }
+const TITLE_MAPPING: Record<string, string> = {
+  OI: 'OI',
+  volume: 'Volume',
+  tuu: 'TVL',
+  dauu: 'Daily Active Users',
+  fees: 'Fees',
+  cummulativeOI: 'Cummulative OI',
+  cummulativeVolume: 'Cummulative Volume',
+  cummulativeTuu: 'Cummulative TVL',
+  cummulativeDauu: 'Cummulative Active Users',
+  cummulativeFees: 'Cummulative Fees',
+};

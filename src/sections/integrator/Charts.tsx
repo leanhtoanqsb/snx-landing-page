@@ -14,6 +14,8 @@ import {
   Legend,
   Bar,
   Line,
+  Brush,
+  BarChart,
 } from 'recharts';
 import { useQuery } from '@tanstack/react-query';
 import { Box, Text, Card, Flex } from '@chakra-ui/react';
@@ -67,9 +69,9 @@ export default function Charts() {
     },
   });
   return (
-    <Box pt="100px" pb="200px" width="100%" id="hero" position="relative">
+    <Box width="100%" position="relative">
       {/* Chart TVL */}
-      <ChartContainer
+      {/* <ChartContainer
         data={data}
         dataKey={['tuu', 'cummulativeTuu']}
         chartLabel="TVL"
@@ -79,7 +81,7 @@ export default function Charts() {
         yTickFormatter={(value) => {
           return `$${compactNumber({ num: value, digits: 1 })}`;
         }}
-      />
+      /> */}
       <Box
         mt="24px"
         display="grid"
@@ -168,6 +170,8 @@ function ChartContainer({
       position="relative"
       zIndex="1"
       sx={{
+        display: 'flex',
+        flexDirection: 'column',
         boxShadow: 'dark',
         width: '100%',
         height: chartHeight,
@@ -181,6 +185,7 @@ function ChartContainer({
         '.recharts-bar-rectangle': { fill: 'whiteAlpha.400' },
         '.recharts-legend-item-text': { color: 'gray.500 !important' },
         '.recharts-line-dots > *': { fill: curveColor, stroke: curveColor },
+        '.recharts-brush-slide': { fill: 'none' },
       }}
     >
       <Flex
@@ -204,49 +209,71 @@ function ChartContainer({
           onChangeTime={(time) => setCurrentTime(time)}
         />
       </Flex>
-      <ResponsiveContainer width="100%" height="100%">
-        <ComposedChart data={data} margin={{ left: 20 }}>
-          <CartesianGrid />
+      <Box flex="1 0 0">
+        <ResponsiveContainer width="100%" height="100%">
+          <ComposedChart data={data}>
+            <CartesianGrid />
 
-          <XAxis
-            dataKey="date"
-            tickLine={false}
-            tickFormatter={(value) => {
-              return `${formatLocalDate(value, 'MM/DD')}`;
-            }}
-            tickMargin={16}
-            interval={'equidistantPreserveStart'}
-          />
-          {/* <YAxis tickFormatter={yTickFormatter} /> */}
-          <Tooltip content={<CustomTooltip />} />
-          <Legend
-            wrapperStyle={{ top: -40, left: 0 }}
-            align="left"
-            type="circle"
-            payload={[
-              {
-                id: dataKey[0],
-                value: TITLE_MAPPING[dataKey[0]],
-                type: 'circle',
-                color: VALUE_COLOR,
-                dataKey: dataKey[0],
-              },
-              {
-                id: dataKey[1],
-                value: 'CUMMULATIVE',
-                type: 'circle',
-                color: CUMMULATIVE_VALUE_COLOR,
-                dataKey: dataKey[1],
-              },
-            ]}
-            content={renderLegend}
-          />
-          {/* <Bar dataKey={dataKey[0]} barSize={20} fill="#413ea0" />
+            <XAxis
+              dataKey="date"
+              tickLine={false}
+              tickFormatter={(value) => {
+                return `${formatLocalDate(value, 'MM/DD')}`;
+              }}
+              // tickMargin={16}
+              interval={'equidistantPreserveStart'}
+              style={{ fontSize: '12px' }}
+            />
+            {/* <YAxis tickFormatter={yTickFormatter} /> */}
+            <Tooltip content={<CustomTooltip />} />
+            <Legend
+              wrapperStyle={{ top: -40, left: 0 }}
+              align="left"
+              type="circle"
+              payload={[
+                {
+                  id: dataKey[0],
+                  value: TITLE_MAPPING[dataKey[0]],
+                  type: 'circle',
+                  color: VALUE_COLOR,
+                  dataKey: dataKey[0],
+                },
+                {
+                  id: dataKey[1],
+                  value: 'CUMMULATIVE',
+                  type: 'circle',
+                  color: CUMMULATIVE_VALUE_COLOR,
+                  dataKey: dataKey[1],
+                },
+              ]}
+              content={renderLegend}
+            />
+            {/* <Bar dataKey={dataKey[0]} barSize={20} fill="#413ea0" />
           <Line type="monotone" dataKey={dataKey[1]} stroke="#ff7300" /> */}
-          <Bar dataKey={dataKey[0]} maxBarSize={40} fill="" />
-          <Line type="linear" dataKey={dataKey[1]} />
-        </ComposedChart>
-      </ResponsiveContainer>
+            <Bar dataKey={dataKey[0]} maxBarSize={40} fill="" />
+            <Line type="linear" dataKey={dataKey[1]} />
+            {/* <Brush dataKey="date" height={40} stroke="#8884d8" /> */}
+            <Brush fill="none">
+              <BarChart>
+                <Bar dataKey={dataKey[0]} maxBarSize={40} fill="" />
+                <XAxis
+                  dataKey="date"
+                  tickLine={false}
+                  axisLine={false}
+                  tickFormatter={(value) => {
+                    return `${formatLocalDate(value, 'MM/DD')}`;
+                  }}
+                  height={0.001}
+                  tickMargin={-20}
+                  fill="none"
+                  interval={4}
+                  style={{ fontSize: '12px' }}
+                />
+              </BarChart>
+            </Brush>
+          </ComposedChart>
+        </ResponsiveContainer>
+      </Box>
     </Card>
   );
 }

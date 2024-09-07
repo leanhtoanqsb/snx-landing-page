@@ -1,46 +1,32 @@
-import Spartan from '@/svg/Spartan';
+import { SectionHeading } from '@/components/@ui/Heading';
+import { SectionParagraph } from '@/components/@ui/Paragraph';
 import { Link } from '@chakra-ui/next-js';
-import {
-  Box,
-  Button,
-  Flex,
-  Show,
-  Text,
-  Image,
-  Heading,
-  Card,
-} from '@chakra-ui/react';
+
+import Discord from '@/svg/Discord';
+import Twitter from '@/svg/Twitter';
+import Github from '@/svg/Github';
+
+import { Box, Button, Flex, Show, Text, Image, Card } from '@chakra-ui/react';
+import ExternalLinkButton from '@/components/@ui/ExternalLinkButton';
 
 export default function IntegratorHero() {
   return (
-    <Box pb="150px" width="100%" id="hero">
+    <Box width="100%">
       <Flex
         width="100%"
         sx={{ justifyContent: 'space-between' }}
         position="relative"
         zIndex={2}
       >
-        <Box pt="260px" width={{ base: '100%', lg: '525px', '2xl': '600px' }}>
-          <Heading
-            fontSize={{ base: '48px', md: '60px' }}
-            lineHeight={{ base: '60px', md: '72px' }}
-            as="h2"
-            color="gray.50"
-            mb="16px"
-          >
-            Kwenta.io
-          </Heading>
-          <Text
-            mb="24px"
-            fontSize="16px"
-            lineHeight="24px"
-            color="gray.500"
-            fontWeight={400}
-          >
+        <Box width={{ base: '100%', lg: '525px', '2xl': '600px' }}>
+          <SectionHeading mb="16px">Kwenta.io</SectionHeading>
+          <SectionParagraph mb="24px">
             Synthetix is a decentralized protocol run by governance, with
             representative councils elected by the community, ensuring every
             decision reflects the collective voice of its users.
-          </Text>
+          </SectionParagraph>
+          <Socials />
+          <Box mb="24px" />
           <Link href="https://liquidity.synthetix.eth.limo/">
             <Button
               gap="8px"
@@ -54,13 +40,9 @@ export default function IntegratorHero() {
             </Button>
           </Link>
         </Box>
-        <Show above="lg">
-          <Box pt="205px">
-            <Note />
-            <Box mb="40px" />
-            <Note />
-          </Box>
-        </Show>
+        <Box>
+          <Note />
+        </Box>
       </Flex>
 
       {/* Png for smaller devices, Svg for larger */}
@@ -126,52 +108,109 @@ export default function IntegratorHero() {
 
 function Note() {
   return (
-    <Card variant="filled" width="465px">
-      <Flex
-        mb="4px"
+    <Card variant="filled" width="588px">
+      <Text
+        mb="32px"
         sx={{
-          height: 'max-content',
-          widht: '100%',
-          alignItems: 'center',
-          justifyContent: 'space-between',
+          color: 'gray.50',
+          fontSize: '20px',
+          lineHeight: '28px',
+          fontWeight: 'bold',
         }}
       >
-        <Flex>
-          <Image src="" width="24px" height="24px" alt="ic" />
-          <Text color="gray.500" fontSize="12px" lineHeight="20px">
-            Optimictis
-          </Text>
-        </Flex>
-        <Text
-          color="gray.50"
-          fontSize="16px"
-          lineHeight="24px"
-          fontWeight="bold"
-        >
-          500 SNAX
-        </Text>
-      </Flex>
-      <Flex alignItems="end" gap="24px">
-        <Box>
-          <Text
-            fontSize="16px"
-            lineHeight="24px"
-            color="gray.50"
-            fontWeight="bold"
-          >
-            Traded on Perps V2 before
-          </Text>
-          <Text fontSize="14px" lineHeight="20px" color="gray.500">
-            Trade on any frontend platform build on top of Synthetix Perps V2
-          </Text>
-        </Box>
-        <Button
-          size="sm"
-          sx={{ bg: '#C4C4C4', px: '4px', py: '8px', flexShrink: 0 }}
-        >
-          Trade on Kwenta
-        </Button>
+        Rewards on Kwenta
+      </Text>
+      <Flex sx={{ width: '100%', flexDirection: 'column', gap: '32px' }}>
+        {events.map((event) => {
+          return (
+            <Flex width="100%" sx={{ gap: 3, justifyContent: 'space-between' }}>
+              <Box flex={1}>
+                <Text
+                  mb="12px"
+                  sx={{ fontSize: '16px', lineHeight: '24px', color: 'white' }}
+                >
+                  {event.title}
+                </Text>
+                <Text
+                  sx={{
+                    fontSize: '14px',
+                    lineHeight: '20px',
+                    color: 'gray.500',
+                  }}
+                >
+                  {event.description}
+                </Text>
+              </Box>
+              <Box flexShrink={0}>
+                <Flex mb="12px" sx={{ alignItems: 'center', gap: 2 }}>
+                  <Image
+                    width={'20px'}
+                    height={'20px'}
+                    src={`/${event.chain}.png`}
+                    alt={event.chain}
+                    overflow="hidden"
+                    flexShrink={0}
+                  />
+                  <Box>{event.chain}</Box>
+                </Flex>
+                <ExternalLinkButton link={event.link}>
+                  More Info
+                </ExternalLinkButton>
+              </Box>
+            </Flex>
+          );
+        })}
       </Flex>
     </Card>
+  );
+}
+
+const events = [
+  {
+    title: 'Kwenta Staking Rewards',
+    description: 'Rewards description goes here',
+    chain: 'OPTIMISTIC',
+    link: '/',
+  },
+  {
+    title: 'SNX Fee Rebate',
+    description: 'Rewards description goes here',
+    chain: 'BASE',
+    link: '/',
+  },
+];
+
+const socialLinks = [
+  {
+    link: 'https://discord.com/invite/KVeCZe6ahW',
+    label: 'discord',
+    image: <Discord />,
+  },
+  {
+    link: 'https://twitter.com/synthetix_io',
+    label: 'twitter',
+    image: <Twitter />,
+  },
+  {
+    link: 'https://github.com/synthetixio',
+    label: 'github',
+    image: <Github />,
+  },
+];
+
+function Socials() {
+  return (
+    <Flex as="ul" sx={{ alignItems: 'center', gap: '16px' }}>
+      {socialLinks.map((s) => (
+        <Link
+          href={s.link}
+          key={s.link}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {s.image}
+        </Link>
+      ))}
+    </Flex>
   );
 }

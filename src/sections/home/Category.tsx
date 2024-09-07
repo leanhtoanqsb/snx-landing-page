@@ -110,7 +110,11 @@ export default function Category() {
           derivatives exchanges, sUSD utility, and more
         </SectionParagraph>
         <Box>
-          <Flex gap="24px" sx={{ '& > div': { flex: 1 } }}>
+          <Flex
+            gap="24px"
+            flexDirection={{ base: 'column', md: 'row' }}
+            sx={{ '& > div': { flex: 1 } }}
+          >
             <Dropdown
               menu={
                 <>

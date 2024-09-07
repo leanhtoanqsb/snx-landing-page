@@ -30,11 +30,7 @@ export const IntegratorCard = ({
 }: IntegratorCardProps) => {
   return (
     <Card variant="filled">
-      <Flex
-        mb="16px"
-        justifyContent={{ base: 'flex-end', md: 'space-between' }}
-        width="100%"
-      >
+      <Flex mb="16px" justifyContent="space-between" width="100%">
         <Image
           alt={`${name}-logo`}
           src={imageUri}

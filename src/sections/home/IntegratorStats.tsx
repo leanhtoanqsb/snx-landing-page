@@ -2,7 +2,9 @@ import { getQueryClient } from '@/app/getQueryClient';
 import { SectionHeading } from '@/components/@ui/Heading';
 import { SectionParagraph } from '@/components/@ui/Paragraph';
 import { getIntegratorDataOption } from '@/queries/integrators';
+import { ArrowDiagonal } from '@/svg/ArrowDiagonal';
 import { formatNumber } from '@/utils/formatters/number';
+import { Image } from '@chakra-ui/next-js';
 import {
   Box,
   Heading,
@@ -13,6 +15,10 @@ import {
   Th,
   Tbody,
   Td,
+  Card,
+  Flex,
+  Text,
+  Show,
 } from '@chakra-ui/react';
 import { dehydrate, HydrationBoundary, useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
@@ -36,6 +42,16 @@ export default function IntegratorStats() {
   );
 }
 
+type IntegratorStatData = {
+  tvl: number;
+  OI: number;
+  dailyVolume: number;
+  dailyFees: number;
+  dailyDau: number;
+};
+
+type FormatedIntegratorStatData = Record<string, IntegratorStatData>;
+
 const INTEGRATOR_MAPPING: Record<string, { label: ReactNode }> = {
   CyberDEX: { label: 'CyberDex' },
   DHEDGE: { label: 'DHedge' },
@@ -44,16 +60,6 @@ const INTEGRATOR_MAPPING: Record<string, { label: ReactNode }> = {
 };
 const OTHER_TRACKING_CODE = 'Other';
 
-type FormatedIntegratorData = Record<
-  string,
-  {
-    tvl: number;
-    OI: number;
-    dailyVolume: number;
-    dailyFees: number;
-    dailyDau: number;
-  }
->;
 function StatsTable() {
   const { data } = useQuery({
     ...getIntegratorDataOption(),
@@ -70,7 +76,7 @@ function StatsTable() {
               dayjs(latestDate).valueOf() >=
               dayjs(integratorData.date).valueOf()
           )
-          ?.reduce?.<FormatedIntegratorData>((result, integratorData) => {
+          ?.reduce?.<FormatedIntegratorStatData>((result, integratorData) => {
             const trackingCode = integratorData.tracking_code;
             const key = !!INTEGRATOR_MAPPING[trackingCode]
               ? trackingCode
@@ -87,52 +93,119 @@ function StatsTable() {
               },
             };
           }, {})
-      : ({} as FormatedIntegratorData);
+      : ({} as FormatedIntegratorStatData);
   return (
-    <TableContainer
-      backgroundColor="navy.700"
-      borderRadius="5px"
-      border="1px solid"
-      borderColor="gray.900"
-    >
-      <Table variant="simple">
-        <Thead>
-          <Tr height="40px" textAlign="left">
-            <Th>Action</Th>
-            <Th>TVL</Th>
-            <Th>Daily OI</Th>
-            <Th>Daily Volume</Th>
-            <Th>Daily Fees</Th>
-            <Th>Daily DAU</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
+    <>
+      <Show above="md">
+        <TableContainer
+          backgroundColor="navy.700"
+          borderRadius="5px"
+          border="1px solid"
+          borderColor="gray.900"
+        >
+          <Table variant="simple">
+            <Thead>
+              <Tr height="40px" textAlign="left">
+                <Th>Action</Th>
+                <Th>TVL</Th>
+                <Th>Daily OI</Th>
+                <Th>Daily Volume</Th>
+                <Th>Daily Fees</Th>
+                <Th>Daily DAU</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {[...Object.keys(INTEGRATOR_MAPPING), OTHER_TRACKING_CODE].map(
+                (tracking_code) => {
+                  return (
+                    <Tr height="60px" key={tracking_code}>
+                      <Td>
+                        {INTEGRATOR_MAPPING[tracking_code]
+                          ? INTEGRATOR_MAPPING[tracking_code].label
+                          : tracking_code}
+                      </Td>
+                      <Td>${formatNumber(formatedData[tracking_code]?.tvl)}</Td>
+                      <Td>${formatNumber(formatedData[tracking_code]?.OI)}</Td>
+                      <Td>
+                        $
+                        {formatNumber(formatedData[tracking_code]?.dailyVolume)}
+                      </Td>
+                      <Td>
+                        ${formatNumber(formatedData[tracking_code]?.dailyFees)}
+                      </Td>
+                      <Td>
+                        ${formatNumber(formatedData[tracking_code]?.dailyDau)}
+                      </Td>
+                    </Tr>
+                  );
+                }
+              )}
+            </Tbody>
+          </Table>
+        </TableContainer>
+      </Show>
+      <Show below="md">
+        <Flex sx={{ flexDirection: 'column', gap: '24px', width: '100%' }}>
           {[...Object.keys(INTEGRATOR_MAPPING), OTHER_TRACKING_CODE].map(
             (tracking_code) => {
               return (
-                <Tr height="60px" key={tracking_code}>
-                  <Td>
-                    {INTEGRATOR_MAPPING[tracking_code]
-                      ? INTEGRATOR_MAPPING[tracking_code].label
-                      : tracking_code}
-                  </Td>
-                  <Td>${formatNumber(formatedData[tracking_code]?.tvl)}</Td>
-                  <Td>${formatNumber(formatedData[tracking_code]?.OI)}</Td>
-                  <Td>
-                    ${formatNumber(formatedData[tracking_code]?.dailyVolume)}
-                  </Td>
-                  <Td>
-                    ${formatNumber(formatedData[tracking_code]?.dailyFees)}
-                  </Td>
-                  <Td>
-                    ${formatNumber(formatedData[tracking_code]?.dailyDau)}
-                  </Td>
-                </Tr>
+                <Box key={tracking_code}>
+                  <IntegratorStatCard
+                    label={
+                      INTEGRATOR_MAPPING[tracking_code]?.label ?? tracking_code
+                    }
+                    data={formatedData[tracking_code]}
+                  />
+                </Box>
               );
             }
           )}
-        </Tbody>
-      </Table>
-    </TableContainer>
+        </Flex>
+      </Show>
+    </>
+  );
+}
+
+function IntegratorStatCard({
+  label,
+  data,
+}: {
+  label: ReactNode;
+  data: IntegratorStatData;
+}) {
+  return (
+    <Card variant="filled" px="16px" py="24px">
+      <Flex mb="16px" sx={{ alignItems: 'center', gap: '12px' }}>
+        <Image src={''} alt="" width={30} height={30} />
+        <Text sx={{ fontSize: '20px', lineHeight: '28px' }}>{label}</Text>
+        <ArrowDiagonal />
+      </Flex>
+
+      <StatItem label="TVL" value={`&${formatNumber(data?.tvl)}`} />
+      <StatItem label="Daily OI" value={`&${formatNumber(data?.OI)}`} />
+      <StatItem
+        label="Daily Volume"
+        value={`&${formatNumber(data?.dailyVolume)}`}
+      />
+      <StatItem
+        label="Daily Fees"
+        value={`&${formatNumber(data?.dailyFees)}`}
+      />
+      <StatItem label="Daily DAU" value={`&${formatNumber(data?.dailyDau)}`} />
+    </Card>
+  );
+}
+function StatItem({ label, value }: { label: ReactNode; value: ReactNode }) {
+  return (
+    <Flex
+      sx={{
+        height: '60px',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+      }}
+    >
+      <Text sx={{ fontSize: '14px', color: 'gray.600' }}>{label}</Text>
+      <Text sx={{ fontSize: '16px', color: 'white' }}>{value}</Text>
+    </Flex>
   );
 }

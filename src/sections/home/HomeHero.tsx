@@ -1,6 +1,6 @@
 import { HeroHeading } from '@/components/@ui/Heading';
 import { SectionParagraph } from '@/components/@ui/Paragraph';
-import { Box, Image } from '@chakra-ui/react';
+import { Box, Image, Show } from '@chakra-ui/react';
 
 export default function HomeHero() {
   return (
@@ -33,16 +33,18 @@ export default function HomeHero() {
         filter="blur(250px)"
         zIndex={0}
       />
-      <Image
-        src="/home-hero-image.png"
-        alt="Spartan"
-        width={{ base: '636px' }}
-        height={{ base: '612px' }}
-        top={{ base: '-65px' }}
-        right={{ base: '-45px' }}
-        position="absolute"
-        zIndex={0}
-      />
+      <Show above="xl">
+        <Image
+          src="/home-hero-image.png"
+          alt="Spartan"
+          width={{ base: '636px' }}
+          height={{ base: '612px' }}
+          top={{ base: '-65px' }}
+          right={{ base: '-45px' }}
+          position="absolute"
+          zIndex={0}
+        />
+      </Show>
     </Box>
   );
 }

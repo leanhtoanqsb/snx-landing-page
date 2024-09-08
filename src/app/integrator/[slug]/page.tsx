@@ -32,7 +32,7 @@ export default function Page() {
         </Text>
       </Flex>
       <IntegratorHero />
-      <Spacer gap={32} />
+      <Spacer gap={{ base: '40px', md: '32px' }} />
       <Description />
       <Spacer gap={32} />
       <HydrationBoundary state={dehydrate(queryClient)}>

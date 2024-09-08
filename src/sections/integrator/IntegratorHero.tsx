@@ -14,6 +14,9 @@ export default function IntegratorHero() {
     <Box width="100%">
       <Flex
         width="100%"
+        alignItems={{ base: 'start', md: 'center' }}
+        flexDirection={{ base: 'column', md: 'row' }}
+        gap="40px"
         sx={{ justifyContent: 'space-between' }}
         position="relative"
         zIndex={2}

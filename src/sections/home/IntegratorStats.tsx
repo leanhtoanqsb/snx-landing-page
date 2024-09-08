@@ -52,11 +52,11 @@ type IntegratorStatData = {
 
 type FormatedIntegratorStatData = Record<string, IntegratorStatData>;
 
-const INTEGRATOR_MAPPING: Record<string, { label: ReactNode }> = {
-  CyberDEX: { label: 'CyberDex' },
-  DHEDGE: { label: 'DHedge' },
-  polynomial: { label: 'Polynomial' },
-  KWENTA: { label: 'KWENTA' },
+const INTEGRATOR_MAPPING: Record<string, { label: ReactNode; link: string }> = {
+  CyberDEX: { label: 'CyberDex', link: '' },
+  DHEDGE: { label: 'DHedge', link: '' },
+  polynomial: { label: 'Polynomial', link: '' },
+  KWENTA: { label: 'KWENTA', link: '' },
 };
 const OTHER_TRACKING_CODE = 'Other';
 
@@ -117,12 +117,18 @@ function StatsTable() {
             <Tbody>
               {[...Object.keys(INTEGRATOR_MAPPING), OTHER_TRACKING_CODE].map(
                 (tracking_code) => {
+                  const integrator = INTEGRATOR_MAPPING[tracking_code];
+
                   return (
                     <Tr height="60px" key={tracking_code}>
                       <Td>
-                        {INTEGRATOR_MAPPING[tracking_code]
-                          ? INTEGRATOR_MAPPING[tracking_code].label
-                          : tracking_code}
+                        <Flex sx={{ alignItems: 'center', gap: '12px' }}>
+                          <Image src={''} alt="" width={30} height={30} />
+                          <Text sx={{ fontSize: '20px', lineHeight: '28px' }}>
+                            {integrator ? integrator.label : tracking_code}
+                          </Text>
+                          {integrator && <ArrowDiagonal />}
+                        </Flex>
                       </Td>
                       <Td>${formatNumber(formatedData[tracking_code]?.tvl)}</Td>
                       <Td>${formatNumber(formatedData[tracking_code]?.OI)}</Td>

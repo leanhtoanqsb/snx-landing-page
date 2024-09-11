@@ -35,24 +35,24 @@ export default function IntegratorNews() {
 
 const mockData = [
   {
-    title: 'Test',
+    title: 'Blog Post',
     description:
       'Polynomial is a DeFi derivatives powerhouse that offers derivatives-based products built on top of Synthetix such as perps. Polynomial is a DeFi derivatives powerhouse that offers derivatives-based products built on top of Synthetix such as perps, power...',
-    imageUri: '',
+    imageUri: '/fake-new-1.png',
     link: '',
   },
   {
-    title: 'Test',
+    title: 'Blog Post',
     description:
       'Polynomial is a DeFi derivatives powerhouse that offers derivatives-based products built on top of Synthetix such as perps. Polynomial is a DeFi derivatives powerhouse that offers derivatives-based products built on top of Synthetix such as perps, power...',
-    imageUri: '',
+    imageUri: '/fake-new-2.png',
     link: '',
   },
   {
-    title: 'Test',
+    title: 'Blog Post',
     description:
       'Polynomial is a DeFi derivatives powerhouse that offers derivatives-based products built on top of Synthetix such as perps. Polynomial is a DeFi derivatives powerhouse that offers derivatives-based products built on top of Synthetix such as perps, power...',
-    imageUri: '',
+    imageUri: '/fake-new-3.png',
     link: '',
   },
 ];

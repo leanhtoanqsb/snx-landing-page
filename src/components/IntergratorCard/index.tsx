@@ -1,4 +1,5 @@
 import { ArrowDiagonal } from '@/svg/ArrowDiagonal';
+import { IntegratorItem } from '@/utils/integrators';
 import {
   Flex,
   Heading,
@@ -22,22 +23,16 @@ interface IntegratorCardProps extends FlexProps {
 }
 
 export const IntegratorCard = ({
-  imageUri,
+  uri,
   name,
   description,
   link,
   tag,
-}: IntegratorCardProps) => {
+}: IntegratorItem) => {
   return (
     <Card variant="filled">
       <Flex mb="16px" justifyContent="space-between" width="100%">
-        <Image
-          alt={`${name}-logo`}
-          src={imageUri}
-          w="50px"
-          h="50px"
-          bg="gray.500"
-        />
+        <Image alt={`${name}-logo`} src={uri} w="50px" h="50px" />
         <Tag
           px="8px"
           py="2px"

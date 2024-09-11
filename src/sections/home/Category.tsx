@@ -8,6 +8,7 @@ import Dropdown, {
 import InputSearch from '@/components/@widget/InputSearch';
 import { IntegratorCard } from '@/components/IntergratorCard';
 import { getIntegratorDataOption } from '@/queries/integrators';
+import { integrators } from '@/utils/integrators';
 import { Image } from '@chakra-ui/react';
 import { Box, Flex } from '@chakra-ui/react';
 import {
@@ -228,9 +229,6 @@ export default function Category() {
           <HydrationBoundary state={dehydrate(queryClient)}>
             <ListCategory state={state} />
           </HydrationBoundary>
-          {mockData.map((data, index) => {
-            return <IntegratorCard key={index} {...data} />;
-          })}
         </Box>
       </Box>
     </Box>
@@ -249,108 +247,9 @@ function ListCategory({ state }: { state: State }) {
 
   return (
     <>
-      {mockData.map((data, index) => {
+      {integrators.map((data, index) => {
         return <IntegratorCard key={index} {...data} />;
       })}
     </>
   );
 }
-
-const mockData = [
-  {
-    name: 'Kwenta',
-    description:
-      'Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity. Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity. Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity.',
-    imageUri: '',
-    link: '/integrator/kwenta',
-    tag: 'perp',
-  },
-  {
-    name: 'Kwenta',
-    description:
-      'Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity.',
-    imageUri: '',
-    link: '/integrator/kwenta',
-    tag: 'perp',
-  },
-  {
-    name: 'Kwenta',
-    description:
-      'Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity.',
-    imageUri: '',
-    link: '/integrator/kwenta',
-    tag: 'perp',
-  },
-  {
-    name: 'Kwenta',
-    description:
-      'Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity. Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity.',
-    imageUri: '',
-    link: '/integrator/kwenta',
-    tag: 'perp',
-  },
-  {
-    name: 'Kwenta',
-    description:
-      'Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity.',
-    imageUri: '',
-    link: '/integrator/kwenta',
-    tag: 'perp',
-  },
-  {
-    name: 'Kwenta',
-    description:
-      'Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity.',
-    imageUri: '',
-    link: '/integrator/kwenta',
-    tag: 'perp',
-  },
-  {
-    name: 'Kwenta',
-    description:
-      'Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity. Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity.',
-    imageUri: '',
-    link: '/integrator/kwenta',
-    tag: 'perp',
-  },
-  {
-    name: 'Kwenta',
-    description:
-      'Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity.',
-    imageUri: '',
-    link: '/integrator/kwenta',
-    tag: 'perp',
-  },
-  {
-    name: 'Kwenta',
-    description:
-      'Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity.',
-    imageUri: '',
-    link: '/integrator/kwenta',
-    tag: 'perp',
-  },
-  {
-    name: 'Kwenta',
-    description:
-      'Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity. Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity.',
-    imageUri: '',
-    link: '/integrator/kwenta',
-    tag: 'perp',
-  },
-  {
-    name: 'Kwenta',
-    description:
-      'Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity.',
-    imageUri: '',
-    link: '/integrator/kwenta',
-    tag: 'perp',
-  },
-  {
-    name: 'Kwenta',
-    description:
-      'Trade crypto, forex, and commodities with up to 50x leverage and deep liquidity.',
-    imageUri: '',
-    link: '/integrator/kwenta',
-    tag: 'perp',
-  },
-];

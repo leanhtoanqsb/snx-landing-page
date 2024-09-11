@@ -31,13 +31,7 @@ export const NewsCard = ({
         justifyContent={{ base: 'flex-end', md: 'space-between' }}
         width="100%"
       >
-        <Image
-          alt={`${title}-logo`}
-          src={imageUri}
-          w="100%"
-          h="203px"
-          bg="gray.500"
-        />
+        <Image alt={`${title}-logo`} src={imageUri} w="100%" h="203px" />
       </Flex>
       <Heading
         mb="16px"

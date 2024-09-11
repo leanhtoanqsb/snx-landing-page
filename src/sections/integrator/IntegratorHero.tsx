@@ -6,10 +6,11 @@ import Discord from '@/svg/Discord';
 import Twitter from '@/svg/Twitter';
 import Github from '@/svg/Github';
 
-import { Box, Button, Flex, Show, Text, Image, Card } from '@chakra-ui/react';
+import { Box, Button, Flex, Text, Image, Card } from '@chakra-ui/react';
 import ExternalLinkButton from '@/components/@ui/ExternalLinkButton';
+import { IntegratorItem } from '@/utils/integrators';
 
-export default function IntegratorHero() {
+export default function IntegratorHero({ data }: { data: IntegratorItem }) {
   return (
     <Box width="100%">
       <Flex
@@ -22,15 +23,11 @@ export default function IntegratorHero() {
         zIndex={2}
       >
         <Box width={{ base: '100%', lg: '525px', '2xl': '600px' }}>
-          <SectionHeading mb="16px">Kwenta.io</SectionHeading>
-          <SectionParagraph mb="24px">
-            Synthetix is a decentralized protocol run by governance, with
-            representative councils elected by the community, ensuring every
-            decision reflects the collective voice of its users.
-          </SectionParagraph>
+          <SectionHeading mb="16px">{data.name}</SectionHeading>
+          <SectionParagraph mb="24px">{data.description}</SectionParagraph>
           <Socials />
           <Box mb="24px" />
-          <Link href="https://liquidity.synthetix.eth.limo/">
+          <Link href={data.link}>
             <Button
               gap="8px"
               p="10px 16px"
@@ -39,77 +36,31 @@ export default function IntegratorHero() {
               fontWeight="bold"
               size={{ base: 'lg', md: 'md' }}
             >
-              Trade on Kwenta
+              Trade on {data.name}
             </Button>
           </Link>
         </Box>
         <Box>
-          <Note />
+          <Note data={data} />
         </Box>
       </Flex>
 
-      {/* Png for smaller devices, Svg for larger */}
-      <Show above="md">
-        <Box left={0} right={0} top={160} position="absolute">
-          <Image
-            position="relative"
-            zIndex={0}
-            src="/Wave.svg"
-            alt="Spartan"
-            minWidth={{ base: '700px' }}
-            width="100%"
-            height="520px"
-          />
-          <Box
-            position="absolute"
-            zIndex={1}
-            top={-10}
-            left={-100}
-            right={-100}
-            bottom={-10}
-            backgroundImage="radial-gradient(rgba(0, 0, 0, 0) 0%, navy.900 60%, navy.900 100%)"
-            backgroundSize="100%"
-            filter="blur(20px)"
-          />
-          {/* <Box
-            position="absolute"
-            zIndex={1}
-            top={0}
-            left={0}
-            right={0}
-            bottom={0}
-            bg="navy.900"
-            filter="blur(500px)"
-          /> */}
-          <Box
-            position="absolute"
-            zIndex={1}
-            top={0}
-            left={0}
-            right="50%"
-            bottom={0}
-            bg="navy.900"
-            filter="blur(300px)"
-          />
-        </Box>
-      </Show>
-      <Show below="md">
+      <Box left={0} right={0} top={0} position="absolute">
         <Image
-          src="/Wave.png"
-          alt="Wave"
-          top={260}
-          left={0}
-          position="absolute"
+          position="relative"
           zIndex={0}
-          minWidth={{ base: '700px' }}
-          width="250%"
+          src={data.uri}
+          alt=""
+          width="600px"
+          height="600px"
+          opacity={0.24}
         />
-      </Show>
+      </Box>
     </Box>
   );
 }
 
-function Note() {
+function Note({ data }: { data: IntegratorItem }) {
   return (
     <Card variant="filled" width="588px">
       <Text
@@ -121,7 +72,7 @@ function Note() {
           fontWeight: 'bold',
         }}
       >
-        Rewards on Kwenta
+        Rewards on {data.name}
       </Text>
       <Flex sx={{ width: '100%', flexDirection: 'column', gap: '32px' }}>
         {events.map((event) => {

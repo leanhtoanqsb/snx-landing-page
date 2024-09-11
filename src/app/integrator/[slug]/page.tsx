@@ -9,13 +9,24 @@ import Description from '@/sections/integrator/Description';
 import IntegratorHero from '@/sections/integrator/IntegratorHero';
 import IntegratorNews from '@/sections/integrator/IntegratorNews';
 import { ArrowLeftIcon } from '@/svg/ArrowLeftIcon';
-import { Flex, Text } from '@chakra-ui/react';
+import { IntegratorItem, integrators } from '@/utils/integrators';
+import { Box, Flex, Text } from '@chakra-ui/react';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 
 export default function Page() {
   const queryClient = getQueryClient();
   void queryClient.prefetchQuery(getIntegratorDataOption());
+
+  const { slug: trackingCode } = useParams();
+  const integrator =
+    integrators.find(
+      (_i) =>
+        _i.tracking_code.toLowerCase() ===
+        (trackingCode as string)?.toLowerCase?.()
+    ) ?? ({} as IntegratorItem);
+  if (!integrator) return <Box>Integrator not found</Box>;
 
   return (
     <PageLayout>
@@ -31,9 +42,9 @@ export default function Page() {
           Back
         </Text>
       </Flex>
-      <IntegratorHero />
+      <IntegratorHero data={integrator} />
       <Spacer gap={{ base: '40px', md: '32px' }} />
-      <Description />
+      <Description data={integrator} />
       <Spacer gap={32} />
       <HydrationBoundary state={dehydrate(queryClient)}>
         <Charts />

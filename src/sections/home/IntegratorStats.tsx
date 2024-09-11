@@ -4,6 +4,7 @@ import { SectionParagraph } from '@/components/@ui/Paragraph';
 import { getIntegratorDataOption } from '@/queries/integrators';
 import { ArrowDiagonal } from '@/svg/ArrowDiagonal';
 import { formatNumber } from '@/utils/formatters/number';
+import { integrators } from '@/utils/integrators';
 import { Image } from '@chakra-ui/next-js';
 import {
   Box,
@@ -52,12 +53,6 @@ type IntegratorStatData = {
 
 type FormatedIntegratorStatData = Record<string, IntegratorStatData>;
 
-const INTEGRATOR_MAPPING: Record<string, { label: ReactNode; link: string }> = {
-  CyberDEX: { label: 'CyberDex', link: '' },
-  DHEDGE: { label: 'DHedge', link: '' },
-  polynomial: { label: 'Polynomial', link: '' },
-  KWENTA: { label: 'KWENTA', link: '' },
-};
 const OTHER_TRACKING_CODE = 'Other';
 
 function StatsTable() {
@@ -78,7 +73,9 @@ function StatsTable() {
           )
           ?.reduce?.<FormatedIntegratorStatData>((result, integratorData) => {
             const trackingCode = integratorData.tracking_code;
-            const key = !!INTEGRATOR_MAPPING[trackingCode]
+            const key = integrators.find(
+              (integrator) => integrator.tracking_code === trackingCode
+            )
               ? trackingCode
               : OTHER_TRACKING_CODE;
             return {
@@ -115,57 +112,64 @@ function StatsTable() {
               </Tr>
             </Thead>
             <Tbody>
-              {[...Object.keys(INTEGRATOR_MAPPING), OTHER_TRACKING_CODE].map(
-                (tracking_code) => {
-                  const integrator = INTEGRATOR_MAPPING[tracking_code];
+              {[
+                ...integrators.map((_i) => _i.tracking_code),
+                OTHER_TRACKING_CODE,
+              ].map((tracking_code, index) => {
+                const integrator = integrators[index];
 
-                  return (
-                    <Tr height="60px" key={tracking_code}>
-                      <Td>
-                        <Flex sx={{ alignItems: 'center', gap: '12px' }}>
-                          <Image src={''} alt="" width={30} height={30} />
-                          <Text sx={{ fontSize: '20px', lineHeight: '28px' }}>
-                            {integrator ? integrator.label : tracking_code}
-                          </Text>
-                          {integrator && <ArrowDiagonal />}
-                        </Flex>
-                      </Td>
-                      <Td>${formatNumber(formatedData[tracking_code]?.tvl)}</Td>
-                      <Td>${formatNumber(formatedData[tracking_code]?.OI)}</Td>
-                      <Td>
-                        $
-                        {formatNumber(formatedData[tracking_code]?.dailyVolume)}
-                      </Td>
-                      <Td>
-                        ${formatNumber(formatedData[tracking_code]?.dailyFees)}
-                      </Td>
-                      <Td>
-                        ${formatNumber(formatedData[tracking_code]?.dailyDau)}
-                      </Td>
-                    </Tr>
-                  );
-                }
-              )}
+                return (
+                  <Tr height="60px" key={tracking_code}>
+                    <Td>
+                      <Flex sx={{ alignItems: 'center', gap: '12px' }}>
+                        {integrator?.uri && (
+                          <Image
+                            src={integrator.uri}
+                            alt=""
+                            width={30}
+                            height={30}
+                          />
+                        )}
+                        <Text sx={{ fontSize: '20px', lineHeight: '28px' }}>
+                          {integrator ? integrator.name : tracking_code}
+                        </Text>
+                        {integrator && <ArrowDiagonal />}
+                      </Flex>
+                    </Td>
+                    <Td>${formatNumber(formatedData[tracking_code]?.tvl)}</Td>
+                    <Td>${formatNumber(formatedData[tracking_code]?.OI)}</Td>
+                    <Td>
+                      ${formatNumber(formatedData[tracking_code]?.dailyVolume)}
+                    </Td>
+                    <Td>
+                      ${formatNumber(formatedData[tracking_code]?.dailyFees)}
+                    </Td>
+                    <Td>
+                      ${formatNumber(formatedData[tracking_code]?.dailyDau)}
+                    </Td>
+                  </Tr>
+                );
+              })}
             </Tbody>
           </Table>
         </TableContainer>
       </Show>
       <Show below="md">
         <Flex sx={{ flexDirection: 'column', gap: '24px', width: '100%' }}>
-          {[...Object.keys(INTEGRATOR_MAPPING), OTHER_TRACKING_CODE].map(
-            (tracking_code) => {
-              return (
-                <Box key={tracking_code}>
-                  <IntegratorStatCard
-                    label={
-                      INTEGRATOR_MAPPING[tracking_code]?.label ?? tracking_code
-                    }
-                    data={formatedData[tracking_code]}
-                  />
-                </Box>
-              );
-            }
-          )}
+          {[
+            ...integrators.map((_i) => _i.tracking_code),
+            OTHER_TRACKING_CODE,
+          ].map((tracking_code, index) => {
+            const integrator = integrators[index];
+            return (
+              <Box key={tracking_code}>
+                <IntegratorStatCard
+                  label={integrator?.name ?? tracking_code}
+                  data={formatedData[tracking_code]}
+                />
+              </Box>
+            );
+          })}
         </Flex>
       </Show>
     </>

@@ -28,6 +28,7 @@ import { getIntegratorDataOption } from '@/queries/integrators';
 import { IntegratorsVolumeData } from '@/components/types';
 import { Props } from 'recharts/types/component/Legend';
 import { ContentType } from 'recharts/types/component/DefaultLegendContent';
+import fetchIntegratorsData from '@/api/integrator';
 
 const CHART_SYNC_ID = 'intergrator-chart';
 const CUMMULATIVE_VALUE_COLOR = '#F4BB40';
@@ -42,32 +43,28 @@ type ChartData = IntegratorsVolumeData & {
 };
 
 export default function Charts() {
-  const { data } = useQuery({
+  const { data: clientData } = useQuery({
     ...getIntegratorDataOption(),
-    select(data) {
-      return data.integratorsVolume
-        ?.filter((_data) => !!_data.tracking_code.match(/Kwenta/i))
-        .slice(0, 30)
-        .reduce<ChartData[]>((result, _data) => {
-          const chartData = _data as ChartData;
-          const lastItem = result[result.length - 1];
-          return [
-            ...result,
-            {
-              ...chartData,
-              cummulativeVolume:
-                (lastItem?.cummulativeVolume ?? 0) + chartData.volume,
-              cummulativeOI: (lastItem?.cummulativeOI ?? 0) + chartData.OI,
-              cummulativeDauu:
-                (lastItem?.cummulativeDauu ?? 0) + chartData.dauu,
-              cummulativeTuu: (lastItem?.cummulativeTuu ?? 0) + chartData.tuu,
-              cummulativeFees:
-                (lastItem?.cummulativeFees ?? 0) + chartData.fees,
-            },
-          ];
-        }, []);
-    },
   });
+  const paresedData = clientData?.integratorsVolume
+    ?.filter((_data) => !!_data.tracking_code.match(/Kwenta/i))
+    .slice(0, 30)
+    .reduce<ChartData[]>((result, _data) => {
+      const chartData = _data as ChartData;
+      const lastItem = result[result.length - 1];
+      return [
+        ...result,
+        {
+          ...chartData,
+          cummulativeVolume:
+            (lastItem?.cummulativeVolume ?? 0) + chartData.volume,
+          cummulativeOI: (lastItem?.cummulativeOI ?? 0) + chartData.OI,
+          cummulativeDauu: (lastItem?.cummulativeDauu ?? 0) + chartData.dauu,
+          cummulativeTuu: (lastItem?.cummulativeTuu ?? 0) + chartData.tuu,
+          cummulativeFees: (lastItem?.cummulativeFees ?? 0) + chartData.fees,
+        },
+      ];
+    }, []);
   return (
     <Box width="100%" position="relative">
       {/* Chart TVL */}
@@ -91,7 +88,7 @@ export default function Charts() {
       >
         {/* Chart daily volume */}
         <ChartContainer
-          data={data}
+          data={paresedData}
           dataKey={['volume', 'cummulativeVolume']}
           chartLabel="Daily Volume"
           curveColor={CUMMULATIVE_VALUE_COLOR}
@@ -102,7 +99,7 @@ export default function Charts() {
 
         {/* Chart daily fees */}
         <ChartContainer
-          data={data}
+          data={paresedData}
           dataKey={['fees', 'cummulativeFees']}
           chartLabel="Daily Fees"
           curveColor={CUMMULATIVE_VALUE_COLOR}
@@ -113,7 +110,7 @@ export default function Charts() {
 
         {/* chart active user */}
         <ChartContainer
-          data={data}
+          data={paresedData}
           dataKey={['dauu', 'cummulativeDauu']}
           chartLabel="Daily Active Users"
           curveColor={CUMMULATIVE_VALUE_COLOR}
@@ -122,7 +119,7 @@ export default function Charts() {
           }}
         />
         <ChartContainer
-          data={data}
+          data={paresedData}
           dataKey={['OI', 'cummulativeOI']}
           chartLabel="Daily OI"
           curveColor={CUMMULATIVE_VALUE_COLOR}
@@ -163,7 +160,7 @@ function ChartContainer({
   areaColor?: string;
   chartLabel: string;
 }) {
-  const [currentTime, setCurrentTime] = useState<TimeFilter>('1m');
+  // const [currentTime, setCurrentTime] = useState<TimeFilter>('1m');
   return (
     <Card
       variant="filled"
@@ -204,10 +201,10 @@ function ChartContainer({
         >
           {chartLabel}
         </Text>
-        <TimeFilter
+        {/* <TimeFilter
           currentTime={currentTime}
           onChangeTime={(time) => setCurrentTime(time)}
-        />
+        /> */}
       </Flex>
       <Box flex="1 0 0">
         <ResponsiveContainer width="100%" height="100%">

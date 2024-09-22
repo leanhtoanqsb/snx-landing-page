@@ -1,9 +1,16 @@
 import { SectionHeading } from '@/components/@ui/Heading';
 import { SectionParagraph } from '@/components/@ui/Paragraph';
 import { NewsCard } from '@/components/NewsCard';
+import { IntegratorNewsData } from '@/components/types';
 import { Box } from '@chakra-ui/react';
+import Parser from 'rss-parser';
+const parser = new Parser();
 
-export default function IntegratorNews() {
+export default function IntegratorNews({
+  data,
+}: {
+  data?: IntegratorNewsData[];
+}) {
   return (
     <Box width="100%" position="relative">
       <Box position="relative" zIndex={1}>
@@ -24,35 +31,20 @@ export default function IntegratorNews() {
           }}
           gap="24px"
         >
-          {mockData.map((data, index) => {
-            return <NewsCard key={index} {...data} />;
+          {data?.map((data, index) => {
+            const imageUri = data.content?.match(/<img src="(.*?)"/)?.[1];
+            return (
+              <NewsCard
+                key={index}
+                imageUri={imageUri}
+                title={data.title}
+                description={data.contentSnippet}
+                link={data.link}
+              />
+            );
           })}
         </Box>
       </Box>
     </Box>
   );
 }
-
-const mockData = [
-  {
-    title: 'Blog Post',
-    description:
-      'Polynomial is a DeFi derivatives powerhouse that offers derivatives-based products built on top of Synthetix such as perps. Polynomial is a DeFi derivatives powerhouse that offers derivatives-based products built on top of Synthetix such as perps, power...',
-    imageUri: '/fake-new-1.png',
-    link: '',
-  },
-  {
-    title: 'Blog Post',
-    description:
-      'Polynomial is a DeFi derivatives powerhouse that offers derivatives-based products built on top of Synthetix such as perps. Polynomial is a DeFi derivatives powerhouse that offers derivatives-based products built on top of Synthetix such as perps, power...',
-    imageUri: '/fake-new-2.png',
-    link: '',
-  },
-  {
-    title: 'Blog Post',
-    description:
-      'Polynomial is a DeFi derivatives powerhouse that offers derivatives-based products built on top of Synthetix such as perps. Polynomial is a DeFi derivatives powerhouse that offers derivatives-based products built on top of Synthetix such as perps, power...',
-    imageUri: '/fake-new-3.png',
-    link: '',
-  },
-];

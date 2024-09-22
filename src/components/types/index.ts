@@ -11,6 +11,14 @@ export type IntegratorsVolumeData = {
   tuu: number;
 };
 
+export interface IntegratorNewsData {
+  title: string;
+  link: string;
+  author: string;
+  contentSnippet: string;
+  content: string;
+}
+
 // export type IntegratorsVolumeResponse = {
 // 	result: {
 // 		rows: IntegratorsVolumeData[];

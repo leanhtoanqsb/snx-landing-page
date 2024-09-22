@@ -1,6 +1,9 @@
-import { IntegratorsVolumeData } from '@/components/types';
+import { IntegratorNewsData, IntegratorsVolumeData } from '@/components/types';
 import axios from 'axios';
 import dayjs from 'dayjs';
+import { INTEGRATOR_MAPPING } from '@/utils/integrators';
+import Parser from 'rss-parser';
+const parser = new Parser();
 
 const INTEGRATORS_VOLUME_URL = 'https://dummyjson.com/c/cb60-184a-4d70-bc63';
 
@@ -24,6 +27,29 @@ export default async function fetchIntegratorsData() {
     return {
       integratorsVolume: [] as unknown as IntegratorsVolumeData[],
     };
+  }
+}
+
+export async function fetchIntegratorNews(trackingCode: string) {
+  try {
+    const { data } = await axios.get<any>(
+      INTEGRATOR_MAPPING[trackingCode].newsLink,
+      {
+        headers: {
+          'Access-Control-Allow-Credentials': 'true',
+          'Access-Control-Allow-Origin': 'http://localhost:3000', // replace this your actual origin
+          'Access-Control-Allow-Methods': 'GET,DELETE,PATCH,POST,PUT',
+          'Access-Control-Allow-Headers':
+            'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version',
+        },
+      }
+    );
+    const parsedData = await parser.parseString(data);
+
+    return { data: parsedData.items.slice(0, 3) as IntegratorNewsData[] };
+  } catch (error) {
+    console.log('Error fetching dune data', error);
+    return { data: undefined };
   }
 }
 

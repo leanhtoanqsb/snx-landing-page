@@ -1,6 +1,6 @@
 import { SectionHeading } from '@/components/@ui/Heading';
 import { SectionParagraph } from '@/components/@ui/Paragraph';
-import { Link } from '@chakra-ui/next-js';
+import { Link } from '@chakra-ui/react';
 
 import Discord from '@/svg/Discord';
 import Twitter from '@/svg/Twitter';

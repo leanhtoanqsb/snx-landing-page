@@ -14,6 +14,7 @@ export interface IntegratorItem {
   height: string;
   width: string;
   tracking_code: string;
+  newsLink: string;
 }
 
 export const INTEGRATOR_MAPPING: { [tracking_code: string]: IntegratorItem } = {
@@ -27,6 +28,7 @@ export const INTEGRATOR_MAPPING: { [tracking_code: string]: IntegratorItem } = {
     tag: 'PERPS',
     height: '30px',
     width: '30px',
+    newsLink: 'https://mirror.xyz/kwenta.eth/feed/atom',
   },
   CyberDEX: {
     tracking_code: 'CyberDEX',
@@ -38,6 +40,7 @@ export const INTEGRATOR_MAPPING: { [tracking_code: string]: IntegratorItem } = {
     tag: 'PERPS',
     height: '30px',
     width: '30px',
+    newsLink: 'https://medium.com/feed/@cyberdex_xyz',
   },
   infinex: {
     tracking_code: 'infinex',
@@ -49,6 +52,8 @@ export const INTEGRATOR_MAPPING: { [tracking_code: string]: IntegratorItem } = {
     tag: 'PERPS',
     height: '30px',
     width: '30px',
+    newsLink: '',
+    // newsLink: 'https://blog.synthetix.io/rss/',
   },
   rageTrade: {
     tracking_code: 'rageTrade',
@@ -59,6 +64,7 @@ export const INTEGRATOR_MAPPING: { [tracking_code: string]: IntegratorItem } = {
     tag: 'PERPS',
     height: '30px',
     width: '30px',
+    newsLink: '',
   },
   toros: {
     tracking_code: '',
@@ -70,6 +76,7 @@ export const INTEGRATOR_MAPPING: { [tracking_code: string]: IntegratorItem } = {
     tag: 'ASST MGMT',
     height: '30px',
     width: '30px',
+    newsLink: '',
   },
   tlx: {
     tracking_code: 'tlx',
@@ -81,6 +88,7 @@ export const INTEGRATOR_MAPPING: { [tracking_code: string]: IntegratorItem } = {
     tag: 'PERPS',
     height: '30px',
     width: '30px',
+    newsLink: 'https://mirror.xyz/tlx.eth/feed/atom',
   },
   thales: {
     tracking_code: '',
@@ -92,6 +100,7 @@ export const INTEGRATOR_MAPPING: { [tracking_code: string]: IntegratorItem } = {
     tag: 'PARIMUTUEL',
     height: '30px',
     width: '30px',
+    newsLink: '',
   },
   polynomial: {
     tracking_code: '',
@@ -103,6 +112,7 @@ export const INTEGRATOR_MAPPING: { [tracking_code: string]: IntegratorItem } = {
     tag: 'PERPS',
     height: '30px',
     width: '30px',
+    newsLink: '',
   },
   DHEDGE: {
     tracking_code: 'DHEDGE',
@@ -114,6 +124,7 @@ export const INTEGRATOR_MAPPING: { [tracking_code: string]: IntegratorItem } = {
     tag: 'ASST MGMT',
     height: '30px',
     width: '30px',
+    newsLink: 'https://blog.dhedge.org/rss/',
   },
   overtime: {
     tracking_code: '',
@@ -125,6 +136,7 @@ export const INTEGRATOR_MAPPING: { [tracking_code: string]: IntegratorItem } = {
     tag: 'AMM',
     height: '30px',
     width: '30px',
+    newsLink: '',
   },
 };
 

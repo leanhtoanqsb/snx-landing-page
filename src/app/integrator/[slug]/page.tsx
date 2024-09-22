@@ -1,33 +1,30 @@
-'use client';
-
-import { getQueryClient } from '@/app/getQueryClient';
+import { fetchIntegratorNews } from '@/api/integrator';
 import Spacer from '@/components/@ui/Spacer';
 import PageLayout from '@/components/PageLayout';
-import { getIntegratorDataOption } from '@/queries/integrators';
 import Charts from '@/sections/integrator/Charts';
 import Description from '@/sections/integrator/Description';
 import IntegratorHero from '@/sections/integrator/IntegratorHero';
 import IntegratorNews from '@/sections/integrator/IntegratorNews';
 import { ArrowLeftIcon } from '@/svg/ArrowLeftIcon';
 import { IntegratorItem, integrators } from '@/utils/integrators';
-import { Box, Flex, Text } from '@chakra-ui/react';
-import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
+import { Flex, Text } from '@chakra-ui/react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
 
-export default function Page() {
-  const queryClient = getQueryClient();
-  void queryClient.prefetchQuery(getIntegratorDataOption());
-
-  const { slug: trackingCode } = useParams();
+export default async function Page({
+  params: { slug: trackingCode },
+}: {
+  params: { slug: string };
+}) {
   const integrator =
     integrators.find(
       (_i) =>
         _i.tracking_code.toLowerCase() ===
         (trackingCode as string)?.toLowerCase?.()
     ) ?? ({} as IntegratorItem);
-  if (!integrator) return <Box>Integrator not found</Box>;
 
+  if (!integrator) return null;
+
+  const { data: news } = await fetchIntegratorNews(integrator.tracking_code);
   return (
     <PageLayout>
       <Flex
@@ -46,11 +43,9 @@ export default function Page() {
       <Spacer gap={{ base: '40px', md: '32px' }} />
       <Description data={integrator} />
       <Spacer gap={32} />
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <Charts />
-      </HydrationBoundary>
+      <Charts />
       <Spacer gap={32} />
-      <IntegratorNews />
+      <IntegratorNews data={news} />;
       <Spacer gap={100} />
     </PageLayout>
   );
